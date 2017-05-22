@@ -31,7 +31,7 @@ new Vue({
             axios.post(endPoint + '/' + this.userName)
                 .then(res => {
                     console.log(res);
-                    this.onSignIn('/sign-in');
+                    // this.onSignIn('/sign-in');
                 })
                 .catch(err => {
                     console.log(err);

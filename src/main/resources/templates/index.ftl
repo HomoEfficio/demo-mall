@@ -15,9 +15,9 @@
         <div class="sign">
             <form id="sign-form" class="sign">
                 <input v-model="userName" placeholder="UserName을 입력하세요.">
-                <button class="btn" v-on:submit.prevent="onSignIn('/sign-in')">Sign In</button>
-                <button class="btn" v-on:submit.prevent="onSignUp('/api/members')">Sign Up</button>
             </form>
+            <button class="btn" v-on:submit.prevent="onSignIn('/sign-in')">Sign In</button>
+            <button class="btn" v-on:click="onSignUp('/members')">Sign Up</button>
         </div>
     </div>
 </div>
