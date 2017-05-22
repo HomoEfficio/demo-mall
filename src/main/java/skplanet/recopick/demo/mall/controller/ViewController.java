@@ -85,8 +85,14 @@ public class ViewController {
         ProductInfoResponseDto productInfoResponseDto = resContainerDto.getProductInfoResponse();
         ProductDto productDto = productInfoResponseDto.getProduct();
         mv.addObject("product", productDto);
-        mv.addObject("productPrice", productDto.getProductPrice());
+        String price = productDto.getProductPrice().getPrice();
+        mv.addObject("productPrice", getIntPriceFrom(price));
 
         return mv;
+    }
+
+    private Integer getIntPriceFrom(String str) {
+        return Integer.parseInt(str.substring(0, str.length() - 1)
+                                   .replaceAll(",", ""));
     }
 }

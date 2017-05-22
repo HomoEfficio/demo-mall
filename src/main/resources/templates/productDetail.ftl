@@ -32,29 +32,29 @@
                     <p>Ship Fee: {{product.shipFee}}</p>
                     <p>Sell Satisfaction: {{product.sellSatisfaction}}</p>
                     <p>Sell Grade: {{product.sellGrade}}</p>
-                    <button class="btn add-to-cart" @click="addToCart(index)">Add to cart</button>
+                    <button class="btn add-to-cart" @click="addToCart()">Add to cart</button>
                 </div>
             </div>
         </div>
         <div class="cart">
             <h2>Shopping Cart</h2>
-            <#--<transition-group name="fade" tag="ul">-->
-                <#--<li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">-->
-                    <#--<div class="item-title">{{ item.name }}</div>-->
-                    <#--<span class="item-qty">{{ item.price }} * {{ item.count }}</span>-->
-                    <#--<button class="btn" v-on:click="inc(index)">+</button>-->
-                    <#--<button class="btn" v-on:click="dec(index)">-</button>-->
-                <#--</li>-->
-            <#--</transition-group>-->
-            <#--<transition name="fade">-->
-                <#--<div v-if="cart.length">-->
-                    <#--<p>Total: {{ total | currency }}</p>-->
-                    <#--<div><button class="btn order-now" v-on:click="onOrder(cart)">Order Now</button></div>-->
-                <#--</div>-->
-            <#--</transition>-->
-            <#--<div v-if="cart.length === 0" class="empty-cart">-->
-                <#--No items in the cart-->
-            <#--</div>-->
+            <transition-group name="fade" tag="ul">
+                <li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">
+                    <div class="item-title">{{ item.name }}</div>
+                    <span class="item-qty">{{ item.price }} * {{ item.count }}</span>
+                    <button class="btn" v-on:click="inc(index)">+</button>
+                    <button class="btn" v-on:click="dec(index)">-</button>
+                </li>
+            </transition-group>
+            <transition name="fade">
+                <div v-if="cart.length">
+                    <p>Total: {{ total }}</p>
+                    <div><button class="btn order-now" v-on:click="onOrder(cart)">Order Now</button></div>
+                </div>
+            </transition>
+            <div v-if="cart.length === 0" class="empty-cart">
+                No items in the cart
+            </div>
         </div>
     </div>
 </div>
@@ -96,7 +96,7 @@ new Vue({
     created() {
         this.product.productCode = '${product.productCode}';
         this.product.productName = '${product.productName}';
-        this.product.productPrice = '${productPrice.price}';
+        this.product.productPrice = parseInt('${productPrice}'.replace(/,/g, ''));
         this.product.basicImage = '${product.basicImage}';
         this.product.addImage1 = '${(product.addImage1)!}';
         this.product.addImage2 = '${(product.addImage2)!}';
@@ -114,8 +114,8 @@ new Vue({
                 this.items = this.items.concat(append);
             }
         },
-        addToCart: function(index) {
-            var item = this.items[index];
+        addToCart: function() {
+            var item = this.product;
             this.total += item.productPrice;
             var found = false;
             for (var i = 0, len = this.cart.length; i < len; i++) {
@@ -130,31 +130,13 @@ new Vue({
                     id: item.productCode,
                     name: item.productName,
                     price: item.productPrice,
-                    image: item.productImage,
-                    image100: item.productImage,
-                    image110: item.productImage,
-                    image120: item.productImage,
-                    image130: item.productImage,
-                    image140: item.productImage,
-                    image150: item.productImage,
-                    image170: item.productImage,
-                    image200: item.productImage,
-                    image250: item.productImage,
-                    image270: item.productImage,
-                    image300: item.productImage,
-                    text1: item.text1,
-                    text2: item.text2,
-                    sellerNick: item.sellerNick,
-                    seller: item.seller,
-                    sellerGrd: item.sellerGrd,
-                    rating: item.rating,
-                    detailPageUrl: item.detailPageUrl,
-                    salePrice: item.salePrice,
-                    delivery: item.delivery,
-                    reviewCount: item.reviewCount,
-                    buySatisfy: item.buySatisfy,
-                    minorYn: item.minorYn,
-                    benefit: item.benefit,
+                    image: item.basicImage,
+                    point: item.point,
+                    chip: item.chip,
+                    installment: item.installment,
+                    shipFee: item.shipFee,
+                    sellSatisfaction: item.sellSatisfaction,
+                    sellGrade: item.sellGrade,
                     count: 1
                 });
             }
