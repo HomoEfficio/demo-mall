@@ -11,3 +11,7 @@ curl -X GET \
   -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' \
   -H 'cache-control: no-cache'
 ```
+
+```
+curl -X GET http://apis.skplanetx.com/11st/v2/common/categories -H 'accept: application/json' -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' -H 'cache-control: no-cache'
+```
