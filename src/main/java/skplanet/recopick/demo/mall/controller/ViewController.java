@@ -11,6 +11,7 @@ import skplanet.recopick.demo.mall.domain.Member;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -30,8 +31,9 @@ public class ViewController {
 
     @PostMapping("/members/{userName}")
     public String signUp(@PathVariable("userName") String userName, Model model) {
-        Optional<Member> optMember = memberRepository.save(new Member(userName));
-        model.addAttribute("member", optMember.orElseThrow(() -> new MemberNotFountException()));
+        Member member = memberRepository.save(new Member(userName));
+        Objects.requireNonNull(member, "Member is null");
+        model.addAttribute("member", member);
         return "main";
     }
 }
