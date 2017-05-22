@@ -2,18 +2,23 @@ package skplanet.recopick.demo.mall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import skplanet.recopick.demo.mall.domain.Member;
+import skplanet.recopick.demo.mall.dto.ProductDto;
+import skplanet.recopick.demo.mall.dto.ProductInfoResponseDto;
+import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,13 +30,13 @@ import java.util.Optional;
 public class ViewController {
 
     private MemberRepository memberRepository;
-    private ObjectMapper objectMapper;
+    private ObjectMapper objMapper;
 
     @Autowired
     public ViewController(MemberRepository memberRepository,
-                          ObjectMapper objectMapper) {
+                          ObjectMapper objMapper) {
         this.memberRepository = memberRepository;
-        this.objectMapper = objectMapper;
+        this.objMapper = objMapper;
     }
 
     @GetMapping("/")
@@ -57,5 +62,31 @@ public class ViewController {
         mv.addObject("member", member);
 
         return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
+    }
+
+    @GetMapping("/products/{productCode}")
+    public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv) throws IOException {
+        mv.setViewName("productDetail");
+
+        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
+        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.set("Cache-control", "no-cache");
+        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
+
+        ResponseEntity<String> reProductInfoDto =
+                restTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
+
+        ProductInfoResultContainerDto resContainerDto =
+                objMapper.readValue(reProductInfoDto.getBody(),
+                        ProductInfoResultContainerDto.class);
+        ProductInfoResponseDto productInfoResponseDto = resContainerDto.getProductInfoResponse();
+        ProductDto productDto = productInfoResponseDto.getProduct();
+        mv.addObject("product", productDto);
+        mv.addObject("productPrice", productDto.getProductPrice());
+
+        return mv;
     }
 }

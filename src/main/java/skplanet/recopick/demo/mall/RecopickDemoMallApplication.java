@@ -21,7 +21,7 @@ public class RecopickDemoMallApplication {
 		SpringApplication.run(RecopickDemoMallApplication.class, args);
 	}
 
-	@Bean
+	@Bean(name = "objMapper")
 	public ObjectMapper caseInsensitiveObjectMapper() {
 		return new ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 	}

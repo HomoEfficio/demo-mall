@@ -1,7 +1,68 @@
-/**
- * Created by 1003604 on 2017. 5. 18..
- */
-const LOAD_NUM = 10;
+<#-- RecoPick의 위젯을 테스트 할 때는 나누어진 페이지가 편리 -->
+<#-- 별도 페이지 렌더링을 위해 Freemarker를 사용한 서버쪽 렌더링으로 구현 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>RecoPick Demo Mall</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <h1>RecoPick Demo Mall</h1>
+    </div>
+    <div class="main">
+        <div class="products">
+            <div class="search-results">
+                <h2>Product Info</h2>
+            </div>
+            <div class="product">
+                <div>
+                    <div class="product-image">
+                        <img :src="product.basicImage">
+                    </div>
+                </div>
+                <div>
+                    <h4 class="product-title">{{product.productName}}</h4>
+                    <p>Price: <strong>{{product.productPrice}}</strong></p>
+                    <p>Point: {{product.point}}</p>
+                    <p>Chip: {{product.chip}}</p>
+                    <p>Installment: {{product.installment}}</p>
+                    <p>Ship Fee: {{product.shipFee}}</p>
+                    <p>Sell Satisfaction: {{product.sellSatisfaction}}</p>
+                    <p>Sell Grade: {{product.sellGrade}}</p>
+                    <button class="btn add-to-cart" @click="addToCart(index)">Add to cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="cart">
+            <h2>Shopping Cart</h2>
+            <#--<transition-group name="fade" tag="ul">-->
+                <#--<li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">-->
+                    <#--<div class="item-title">{{ item.name }}</div>-->
+                    <#--<span class="item-qty">{{ item.price }} * {{ item.count }}</span>-->
+                    <#--<button class="btn" v-on:click="inc(index)">+</button>-->
+                    <#--<button class="btn" v-on:click="dec(index)">-</button>-->
+                <#--</li>-->
+            <#--</transition-group>-->
+            <#--<transition name="fade">-->
+                <#--<div v-if="cart.length">-->
+                    <#--<p>Total: {{ total | currency }}</p>-->
+                    <#--<div><button class="btn order-now" v-on:click="onOrder(cart)">Order Now</button></div>-->
+                <#--</div>-->
+            <#--</transition>-->
+            <#--<div v-if="cart.length === 0" class="empty-cart">-->
+                <#--No items in the cart-->
+            <#--</div>-->
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/scrollMonitor.js"></script>
+<script>
+<#-- 서버쪽 렌더링으로 구현했기 때문에 js에 값을 심어주려면 js를 분리하지 말고 ftl 안으로 가져와야 함 -->
 const RECO_SERVICE_ID = '543';
 const RECO_REF = 'http://dev.recopick.com/index.html';
 const RECO_URL = 'http://dev.recopick.com/index.html';
@@ -23,6 +84,7 @@ const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
 new Vue({
     el: '#app',
     data: {
+        product: {},
         total: 0,
         items: [],
         cart: [],
@@ -31,6 +93,20 @@ new Vue({
         lastSearch: '',
         loading: false
     },
+    created() {
+        this.product.productCode = '${product.productCode}';
+        this.product.productName = '${product.productName}';
+        this.product.productPrice = '${productPrice.price}';
+        this.product.basicImage = '${product.basicImage}';
+        this.product.addImage1 = '${(product.addImage1)!}';
+        this.product.addImage2 = '${(product.addImage2)!}';
+        this.product.point = '${product.point}';
+        this.product.chip = '${product.chip}';
+        this.product.installment = '${product.installment}';
+        this.product.shipFee = '${product.shipFee}';
+        this.product.sellSatisfaction = '${product.sellSatisfaction}';
+        this.product.sellGrade = '${product.sellGrade}';
+    },
     methods: {
         appendItems() {
             if (this.items.length < this.results.length) {
@@ -38,43 +114,11 @@ new Vue({
                 this.items = this.items.concat(append);
             }
         },
-        onSearch() {
-            if (this.newSearch.length) {
-                this.items = [];
-                this.loading = true;
-                axios.get('/api/search/'.concat(this.newSearch))
-                    .then(res => {
-console.log(res);
-                        this.lastSearch = this.newSearch;
-                        this.results = res.data;
-                        this.appendItems();
-                        this.loading = false;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-                this.sendLog('search', {
-                    service_id: RECO_SERVICE_ID,
-                    uid: RECO_UID,
-                    ref: RECO_REF,
-                    url: RECO_URL,
-                    q: this.newSearch,
-                    user: {
-                        mid: RECO_MID,
-                        gender: RECO_GENDER,
-                        birthyear: RECO_BIRTHYEAR
-                    }
-                });
-            }
-        },
-        onDetail(index) {
-            document.location.href = '/products/' + this.items[index].productCode;
-        },
         addToCart: function(index) {
             var item = this.items[index];
             this.total += item.productPrice;
             var found = false;
-            for (let i = 0, len = this.cart.length; i < len; i++) {
+            for (var i = 0, len = this.cart.length; i < len; i++) {
                 if (this.cart[i].id === item.productCode) {
                     this.cart[i].count++;
                     found = true;
@@ -113,7 +157,6 @@ console.log(res);
                     benefit: item.benefit,
                     count: 1
                 });
-                // Todo: cart 아이템을 DB에 저장(cart 비우고 현재 카트 아이템으로 insert)
             }
             this.sendLog('basket', {
                 service_id: RECO_SERVICE_ID,
@@ -143,21 +186,6 @@ console.log(res);
             }
             this.sendLog('basket', { msg: 'dec' });
         },
-        onOrder: function(cart) {
-            this.convertToOrderItems(cart);
-            this.sendLog('order', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-        },
         sendLog: function(action, payload) {
             console.log(action, payload);
         },
@@ -180,3 +208,6 @@ console.log(res);
         }
     },
 });
+</script>
+</body>
+</html>
