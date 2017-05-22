@@ -9,13 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ArgumentsDto {
+public class ProductInfoResultContainerDto {
 
-    private String searchKeyword;
-
-    private String productCode;
-
-    private String sortCode;
-
-    private String option;
+    private ProductInfoResponseDto productInfoResponse;
 }
