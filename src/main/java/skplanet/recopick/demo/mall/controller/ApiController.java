@@ -1,0 +1,67 @@
+package skplanet.recopick.demo.mall.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.*;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.context.request.async.DeferredResult;
+import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
+
+import java.io.IOException;
+
+/**
+ * @author homo.efficio@gmail.com
+ *         created on 2017-05-22
+ */
+@RestController
+@RequestMapping("/api")
+public class ApiController {
+
+    private ObjectMapper caseInsensitiveObjectMapper;
+
+    public ApiController(ObjectMapper caseInsensitiveObjectMapper) {
+        this.caseInsensitiveObjectMapper = caseInsensitiveObjectMapper;
+    }
+
+    /**
+     * 상품 검색
+     * 11번가 상품 검색 Open API 사용
+     *
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/search/{keyword}")
+    public DeferredResult<String> search11st(@PathVariable("keyword") String keyword) {
+        DeferredResult<String> df = new DeferredResult<>();
+
+        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword;
+        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
+        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.set("Cache-control", "no-cache");
+        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
+
+        ListenableFuture<ResponseEntity<String>> lFuture = asyncRestTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
+        lFuture.addCallback(
+                result -> {
+                    try {
+                        SearchResultContainerDto searchResultContainerDto =
+                                caseInsensitiveObjectMapper.readValue(result.getBody(), SearchResultContainerDto.class);
+                        df.setResult(caseInsensitiveObjectMapper.writeValueAsString(searchResultContainerDto.getProductSearchResponse().getProducts().getProduct()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    System.out.println(error);
+                }
+        );
+
+        return df;
+    }
+}
