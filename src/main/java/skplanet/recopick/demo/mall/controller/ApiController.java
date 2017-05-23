@@ -8,10 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.Cart;
+import skplanet.recopick.demo.mall.domain.Product;
 import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
+import skplanet.recopick.demo.mall.repository.ProductRepository;
+import skplanet.recopick.demo.mall.service.CartService;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author homo.efficio@gmail.com
@@ -22,10 +26,16 @@ import java.io.IOException;
 public class ApiController {
 
     private ObjectMapper objMapper;
+    private CartService cartService;
+    private ProductRepository productRepository;
 
     @Autowired
-    public ApiController(ObjectMapper objMapper) {
+    public ApiController(ObjectMapper objMapper,
+                         CartService cartService,
+                         ProductRepository productRepository) {
         this.objMapper = objMapper;
+        this.cartService = cartService;
+        this.productRepository = productRepository;
     }
 
     /**
@@ -53,8 +63,13 @@ public class ApiController {
                     try {
                         SearchResultContainerDto searchResultContainerDto =
                                 objMapper.readValue(result.getBody(), SearchResultContainerDto.class);
-                        df.setResult(objMapper.writeValueAsString(
-                                searchResultContainerDto.getProductSearchResponse().getProducts().getProduct()));
+
+                        // Product 데이터가 테이블에 없으므로, 검색할 때마다 DB에 넣어 Product 데이터 구성
+                        List<Product> products = searchResultContainerDto.getProductSearchResponse().getProducts().getProduct();
+                        products.stream()
+                                .forEach((p) -> productRepository.save(p));
+
+                        df.setResult(objMapper.writeValueAsString(products));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -104,6 +119,7 @@ public class ApiController {
     @PostMapping("/carts/{userName}")
     public void saveCart(@PathVariable("userName") String userName,
                          @RequestBody Cart cart){
-        System.out.println(cart);
+        Long cartId = cartService.cart(userName, cart);
+        System.out.println("saved CardId: " + cartId);
     }
 }

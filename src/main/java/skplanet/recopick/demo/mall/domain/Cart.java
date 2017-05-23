@@ -27,9 +27,23 @@ public class Cart extends BaseEntity implements Serializable {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems = new ArrayList<>();
+    @OneToMany(mappedBy = "cart")
+    private List<CartItem> cartItems;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cart cart = (Cart) o;
+
+        return member.equals(cart.member);
+    }
+
+    @Override
+    public int hashCode() {
+        return member.hashCode();
+    }
 
     // 엔티티 매핑을 하지 않는 방식
 //    private String userName;

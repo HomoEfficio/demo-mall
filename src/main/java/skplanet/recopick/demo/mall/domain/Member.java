@@ -36,6 +36,24 @@ public class Member extends BaseEntity implements Serializable {
         this.userName = userName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Member member = (Member) o;
+
+        if (id != null ? !id.equals(member.id) : member.id != null) return false;
+        return userName.equals(member.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + userName.hashCode();
+        return result;
+    }
+
     //    @OneToOne
 //    @JoinColumn(name = "basket_id")
 //    private Basket basket;

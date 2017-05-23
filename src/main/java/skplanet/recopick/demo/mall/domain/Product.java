@@ -65,7 +65,6 @@ public class Product extends BaseEntity implements Serializable {
 
     private String rating;
 
-    @NotNull
     private String detailPageUrl;
 
     private String salePrice;
@@ -80,6 +79,22 @@ public class Product extends BaseEntity implements Serializable {
 
     @Embedded
     private Benefit benefit;
+
+
+    // 이하 Product Detail 에 나오는 컬럼
+
+    // 원래 point지만 Benefit의 point와 충돌되어 s 붙임
+    private String points;
+
+    private String chip;
+
+    private String installment;
+
+    private String shipFee;
+
+    private String sellSatisfaction;
+
+    private String sellGrade;
 
 //    @ManyToOne
 //    @JoinColumn(name = "order_id")

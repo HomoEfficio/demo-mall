@@ -2,7 +2,6 @@ package skplanet.recopick.demo.mall.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import skplanet.recopick.demo.mall.dto.ProductDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,19 +13,25 @@ import java.io.Serializable;
 //@Embeddable
 @Entity
 @Table(name = "CART_ITEM")
+//@IdClass(CartItemId.class)
 @Getter
 @Setter
 public class CartItem extends BaseEntity implements Serializable {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "cart_item_id")
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    @Column(name = "cart_item_id")
+//    private Long id;
 
+    @EmbeddedId
+    private CartItemId cartItemId;
+
+//    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code")
     private Product product;
 
+//    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;

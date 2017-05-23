@@ -136,7 +136,7 @@ new Vue({
                         productName: item.productName,
                         productPrice: item.productPrice,
                         productImage: item.basicImage,
-                        point: item.point,
+                        points: item.point,
                         chip: item.chip,
                         installment: item.installment,
                         shipFee: item.shipFee,
@@ -176,6 +176,7 @@ new Vue({
             this.total -= current.product.productPrice;
             if (current.quantity <= 0) {
                 this.cart.splice(i, 1);
+                // Todo 개수가 0이 될 때 DB에서 해당 CartItem을 삭제해줘야 함
             }
             this.sendLog('basket', { msg: 'dec' });
             this.sendCurrentCart();
