@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
+import skplanet.recopick.demo.mall.domain.Cart;
 import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
 
@@ -101,5 +99,11 @@ public class ApiController {
         );
 
         return df;
+    }
+
+    @PostMapping("/carts/{userName}")
+    public void saveCart(@PathVariable("userName") String userName,
+                         @RequestBody Cart cart) {
+        System.out.println(cart);
     }
 }

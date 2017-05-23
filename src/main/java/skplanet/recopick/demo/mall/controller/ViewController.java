@@ -65,7 +65,7 @@ public class ViewController {
     }
 
     @GetMapping("/products/{productCode}")
-    public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv) throws IOException {
+    public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv, HttpServletRequest request) throws IOException {
         mv.setViewName("productDetail");
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
@@ -87,6 +87,7 @@ public class ViewController {
         mv.addObject("product", productDto);
         String price = productDto.getProductPrice().getPrice();
         mv.addObject("productPrice", getIntPriceFrom(price));
+//        mv.addObject("userName", request.getSession().getAttribute("userName"));
 
         return mv;
     }

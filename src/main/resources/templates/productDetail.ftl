@@ -1,5 +1,5 @@
 <#-- RecoPick의 위젯을 테스트 할 때는 나누어진 페이지가 편리 -->
-<#-- 별도 페이지 렌더링을 위해 Freemarker를 사용한 서버쪽 렌더링으로 구현 -->
+<#-- 상품 상세 보기를 별도 페이지로 렌더링 하기 위해 Freemarker를 사용한 서버쪽 렌더링으로 구현 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -40,8 +40,8 @@
             <h2>Shopping Cart</h2>
             <transition-group name="fade" tag="ul">
                 <li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">
-                    <div class="item-title">{{ item.name }}</div>
-                    <span class="item-qty">{{ item.price }} * {{ item.count }}</span>
+                    <div class="item-title">{{ item.productName }}</div>
+                    <span class="item-qty">{{ item.productPrice }} * {{ item.quantity }}</span>
                     <button class="btn" v-on:click="inc(index)">+</button>
                     <button class="btn" v-on:click="dec(index)">-</button>
                 </li>
@@ -84,6 +84,7 @@ const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
 new Vue({
     el: '#app',
     data: {
+        userName: '',
         product: {},
         total: 0,
         items: [],
@@ -94,6 +95,7 @@ new Vue({
         loading: false
     },
     created() {
+        this.userName = '${Session.userName}';
         this.product.productCode = '${product.productCode}';
         this.product.productName = '${product.productName}';
         this.product.productPrice = parseInt('${productPrice}'.replace(/,/g, ''));
@@ -119,25 +121,28 @@ new Vue({
             this.total += item.productPrice;
             var found = false;
             for (var i = 0, len = this.cart.length; i < len; i++) {
-                if (this.cart[i].id === item.productCode) {
-                    this.cart[i].count++;
+                let currentItem = this.cart[i];
+                if (currentItem.productCode === item.productCode) {
+                    currentItem.quantity++;
+                    currentItem.amounts = currentItem.productPrice * currentItem.quantity;
                     found = true;
                     break;
                 }
             }
             if (!found) {
                 this.cart.push({
-                    id: item.productCode,
-                    name: item.productName,
-                    price: item.productPrice,
-                    image: item.basicImage,
+                    productCode: item.productCode,
+                    productName: item.productName,
+                    productPrice: item.productPrice,
+                    productImage: item.basicImage,
                     point: item.point,
                     chip: item.chip,
                     installment: item.installment,
                     shipFee: item.shipFee,
                     sellSatisfaction: item.sellSatisfaction,
                     sellGrade: item.sellGrade,
-                    count: 1
+                    quantity: 1,
+                    amounts: item.productPrice * 1
                 });
             }
             this.sendLog('basket', {
@@ -152,21 +157,40 @@ new Vue({
                     birthyear: RECO_BIRTHYEAR
                 }
             });
+            this.sendCurrentCart();
         },
         inc: function(i) {
             var current = this.cart[i];
-            current.count++;
-            this.total += current.price;
+            current.quantity++;
+            current.amounts = current.productPrice * current.quantity;
+            this.total += current.productPrice;
             this.sendLog('basket', { msg: 'inc' });
+            this.sendCurrentCart();
         },
         dec: function(i) {
             var current = this.cart[i];
-            current.count--;
-            this.total -= current.price;
-            if (current.count <= 0) {
+            current.quantity--;
+            current.amounts = current.productPrice * current.quantity;
+            this.total -= current.productPrice;
+            if (current.quantity <= 0) {
                 this.cart.splice(i, 1);
             }
             this.sendLog('basket', { msg: 'dec' });
+            this.sendCurrentCart();
+        },
+        sendCurrentCart() {
+            axios.post('/api/carts/' + this.userName,
+                    {
+                        userName: this.userName,
+                        cartItems: this.cart
+                    })
+                    .then(res => {
+                        console.log(res);
+                        this.onSignIn();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
