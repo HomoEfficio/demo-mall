@@ -1,5 +1,8 @@
 package skplanet.recopick.demo.mall.service;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import skplanet.recopick.demo.mall.domain.Cart;
 import skplanet.recopick.demo.mall.domain.CartItem;
@@ -18,19 +21,12 @@ import java.util.Optional;
  *         created on 2017-05-23
  */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CartService {
 
-    private CartRepository cartRepository;
-    private MemberRepository memberRepository;
-    private CartItemRepository cartItemRepository;
-
-    public CartService(CartRepository cartRepository,
-                       MemberRepository memberRepository,
-                       CartItemRepository cartItemRepository) {
-        this.cartRepository = cartRepository;
-        this.memberRepository = memberRepository;
-        this.cartItemRepository = cartItemRepository;
-    }
+    @NonNull private final CartRepository cartRepository;
+    @NonNull private final MemberRepository memberRepository;
+    @NonNull private final CartItemRepository cartItemRepository;
 
     public Long cart(String userName, Cart cart) {
 

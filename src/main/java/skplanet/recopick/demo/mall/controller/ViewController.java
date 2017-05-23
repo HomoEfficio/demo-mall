@@ -1,6 +1,8 @@
 package skplanet.recopick.demo.mall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -27,17 +29,11 @@ import java.util.Optional;
  *         created on 2017-05-22
  */
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ViewController {
 
-    private MemberRepository memberRepository;
-    private ObjectMapper objMapper;
-
-    @Autowired
-    public ViewController(MemberRepository memberRepository,
-                          ObjectMapper objMapper) {
-        this.memberRepository = memberRepository;
-        this.objMapper = objMapper;
-    }
+    @NonNull private final MemberRepository memberRepository;
+    @NonNull private final ObjectMapper objMapper;
 
     @GetMapping("/")
     public String index() {

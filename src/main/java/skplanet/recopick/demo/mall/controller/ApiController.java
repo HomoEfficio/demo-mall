@@ -1,6 +1,8 @@
 package skplanet.recopick.demo.mall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -23,20 +25,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApiController {
 
-    private ObjectMapper objMapper;
-    private CartService cartService;
-    private ProductRepository productRepository;
-
-    @Autowired
-    public ApiController(ObjectMapper objMapper,
-                         CartService cartService,
-                         ProductRepository productRepository) {
-        this.objMapper = objMapper;
-        this.cartService = cartService;
-        this.productRepository = productRepository;
-    }
+    @NonNull private final ObjectMapper objMapper;
+    @NonNull private final CartService cartService;
+    @NonNull private final ProductRepository productRepository;
 
     /**
      * 상품 검색
