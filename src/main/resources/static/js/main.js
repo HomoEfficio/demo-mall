@@ -23,6 +23,7 @@ const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
 new Vue({
     el: '#app',
     data: {
+        userName: document.location.href.substring(document.location.href.lastIndexOf('/') + 1),
         total: 0,
         items: [],
         cart: [],
@@ -75,43 +76,48 @@ console.log(res);
             this.total += item.productPrice;
             var found = false;
             for (let i = 0, len = this.cart.length; i < len; i++) {
-                if (this.cart[i].id === item.productCode) {
-                    this.cart[i].count++;
+                let currentItem = this.cart[i];
+                if (currentItem.product.productCode === item.productCode) {
+                    currentItem.quantity++;
+                    currentItem.amounts = currentItem.product.productPrice * currentItem.quantity;
                     found = true;
                     break;
                 }
             }
             if (!found) {
                 this.cart.push({
-                    id: item.productCode,
-                    name: item.productName,
-                    price: item.productPrice,
-                    image: item.productImage,
-                    image100: item.productImage,
-                    image110: item.productImage,
-                    image120: item.productImage,
-                    image130: item.productImage,
-                    image140: item.productImage,
-                    image150: item.productImage,
-                    image170: item.productImage,
-                    image200: item.productImage,
-                    image250: item.productImage,
-                    image270: item.productImage,
-                    image300: item.productImage,
-                    text1: item.text1,
-                    text2: item.text2,
-                    sellerNick: item.sellerNick,
-                    seller: item.seller,
-                    sellerGrd: item.sellerGrd,
-                    rating: item.rating,
-                    detailPageUrl: item.detailPageUrl,
-                    salePrice: item.salePrice,
-                    delivery: item.delivery,
-                    reviewCount: item.reviewCount,
-                    buySatisfy: item.buySatisfy,
-                    minorYn: item.minorYn,
-                    benefit: item.benefit,
-                    count: 1
+                    product: {
+                        productCode: item.productCode,
+                        productName: item.productName,
+                        productPrice: item.productPrice,
+                        productImage: item.productImage,
+                        // image100: item.productImage,
+                        // image110: item.productImage,
+                        // image120: item.productImage,
+                        // image130: item.productImage,
+                        // image140: item.productImage,
+                        // image150: item.productImage,
+                        // image170: item.productImage,
+                        // image200: item.productImage,
+                        // image250: item.productImage,
+                        // image270: item.productImage,
+                        // image300: item.productImage,
+                        // text1: item.text1,
+                        // text2: item.text2,
+                        // sellerNick: item.sellerNick,
+                        // seller: item.seller,
+                        // sellerGrd: item.sellerGrd,
+                        // rating: item.rating,
+                        // detailPageUrl: item.detailPageUrl,
+                        // salePrice: item.salePrice,
+                        // delivery: item.delivery,
+                        // reviewCount: item.reviewCount,
+                        // buySatisfy: item.buySatisfy,
+                        // minorYn: item.minorYn,
+                        // benefit: item.benefit,
+                    },
+                    quantity: 1,
+                    amounts: item.productPrice * 1
                 });
                 // Todo: cart 아이템을 DB에 저장(cart 비우고 현재 카트 아이템으로 insert)
             }
@@ -127,21 +133,48 @@ console.log(res);
                     birthyear: RECO_BIRTHYEAR
                 }
             });
+            this.sendCurrentCart();
         },
         inc: function(i) {
             var current = this.cart[i];
-            current.count++;
-            this.total += current.price;
-            this.sendLog('basket', { msg: 'inc' });
+            current.quantity++;
+            current.amounts = current.product.productPrice * current.quantity;
+            this.total += current.product.productPrice;
+            this.sendLog('basket', {
+                service_id: RECO_SERVICE_ID,
+                uid: RECO_UID,
+                ref: RECO_REF,
+                url: RECO_URL,
+                items: this.cart,
+                user: {
+                    mid: RECO_MID,
+                    gender: RECO_GENDER,
+                    birthyear: RECO_BIRTHYEAR
+                }
+            });
+            this.sendCurrentCart();
         },
         dec: function(i) {
             var current = this.cart[i];
-            current.count--;
-            this.total -= current.price;
-            if (current.count <= 0) {
+            current.quantity--;
+            current.amounts = current.product.productPrice * current.quantity;
+            this.total -= current.product.productPrice;
+            if (current.quantity <= 0) {
                 this.cart.splice(i, 1);
             }
-            this.sendLog('basket', { msg: 'dec' });
+            this.sendLog('basket', {
+                service_id: RECO_SERVICE_ID,
+                uid: RECO_UID,
+                ref: RECO_REF,
+                url: RECO_URL,
+                items: this.cart,
+                user: {
+                    mid: RECO_MID,
+                    gender: RECO_GENDER,
+                    birthyear: RECO_BIRTHYEAR
+                }
+            });
+            this.sendCurrentCart();
         },
         onOrder: function(cart) {
             this.convertToOrderItems(cart);
@@ -160,6 +193,21 @@ console.log(res);
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
+        },
+        sendCurrentCart() {
+            axios.post('/api/carts/' + this.userName,
+                {
+                    member: {
+                        userName: this.userName
+                    },
+                    cartItems: this.cart
+                })
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {

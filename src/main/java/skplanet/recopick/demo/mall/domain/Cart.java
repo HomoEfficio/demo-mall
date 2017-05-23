@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +23,20 @@ public class Cart extends BaseEntity implements Serializable {
     @Column(name = "cart_id")
     private Long id;
 
-    private String userName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @ElementCollection
-    @CollectionTable(name = "CART_ITEM",
-                     joinColumns = @JoinColumn(name = "cart_id"))
-    @OrderColumn(name = "item_idx")
-    private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
+
+
+    // 엔티티 매핑을 하지 않는 방식
+//    private String userName;
+//
+//    @ElementCollection
+//    @CollectionTable(name = "CART_ITEM",
+//                     joinColumns = @JoinColumn(name = "cart_id"))
+//    @OrderColumn(name = "item_idx")
+//    private List<CartItem> cartItems;
 }

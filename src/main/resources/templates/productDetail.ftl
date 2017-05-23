@@ -122,7 +122,7 @@ new Vue({
             var found = false;
             for (var i = 0, len = this.cart.length; i < len; i++) {
                 let currentItem = this.cart[i];
-                if (currentItem.productCode === item.productCode) {
+                if (currentItem.product.productCode === item.productCode) {
                     currentItem.quantity++;
                     currentItem.amounts = currentItem.productPrice * currentItem.quantity;
                     found = true;
@@ -131,16 +131,18 @@ new Vue({
             }
             if (!found) {
                 this.cart.push({
-                    productCode: item.productCode,
-                    productName: item.productName,
-                    productPrice: item.productPrice,
-                    productImage: item.basicImage,
-                    point: item.point,
-                    chip: item.chip,
-                    installment: item.installment,
-                    shipFee: item.shipFee,
-                    sellSatisfaction: item.sellSatisfaction,
-                    sellGrade: item.sellGrade,
+                    product: {
+                        productCode: item.productCode,
+                        productName: item.productName,
+                        productPrice: item.productPrice,
+                        productImage: item.basicImage,
+                        point: item.point,
+                        chip: item.chip,
+                        installment: item.installment,
+                        shipFee: item.shipFee,
+                        sellSatisfaction: item.sellSatisfaction,
+                        sellGrade: item.sellGrade,
+                    },
                     quantity: 1,
                     amounts: item.productPrice * 1
                 });
@@ -162,16 +164,16 @@ new Vue({
         inc: function(i) {
             var current = this.cart[i];
             current.quantity++;
-            current.amounts = current.productPrice * current.quantity;
-            this.total += current.productPrice;
+            current.amounts = current.product.productPrice * current.quantity;
+            this.total += current.product.productPrice;
             this.sendLog('basket', { msg: 'inc' });
             this.sendCurrentCart();
         },
         dec: function(i) {
             var current = this.cart[i];
             current.quantity--;
-            current.amounts = current.productPrice * current.quantity;
-            this.total -= current.productPrice;
+            current.amounts = current.product.productPrice * current.quantity;
+            this.total -= current.product.productPrice;
             if (current.quantity <= 0) {
                 this.cart.splice(i, 1);
             }
@@ -181,7 +183,9 @@ new Vue({
         sendCurrentCart() {
             axios.post('/api/carts/' + this.userName,
                     {
-                        userName: this.userName,
+                        member: {
+                            userName: this.userName
+                        },
                         cartItems: this.cart
                     })
                     .then(res => {

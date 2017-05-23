@@ -8,7 +8,7 @@
 <body>
 <div id="app">
     <div class="header">
-        <h1>RecoPick Demo Mall - ${member.userName}</h1>
+        <h1>RecoPick Demo Mall - ${Session.userName}</h1>
         <form class="searchbar" v-on:submit.prevent="onSearch">
             <input v-model="newSearch" placeholder="Search for posters">
             <input type="submit" value="Search" class="btn">
@@ -44,8 +44,8 @@
             <h2>Shopping Cart</h2>
             <transition-group name="fade" tag="ul">
                 <li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">
-                    <div class="item-title">{{ item.name }}</div>
-                    <span class="item-qty">{{ item.price }} * {{ item.count }}</span>
+                    <div class="item-title">{{ item.product.productName }}</div>
+                    <span class="item-qty">{{ item.product.productPrice }} * {{ item.quantity }}</span>
                     <button class="btn" v-on:click="inc(index)">+</button>
                     <button class="btn" v-on:click="dec(index)">-</button>
                 </li>

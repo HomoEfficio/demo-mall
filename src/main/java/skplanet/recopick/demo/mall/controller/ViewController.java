@@ -59,7 +59,7 @@ public class ViewController {
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
         Member member = memberOptional.orElseThrow(MemberNotFountException::new);
         request.getSession().setAttribute("userName", userName);
-        mv.addObject("member", member);
+//        mv.addObject("member", member);
 
         return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
     }
