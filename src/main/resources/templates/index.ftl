@@ -14,7 +14,7 @@
     <div class="main">
         <div class="sign">
             <form id="sign-form" class="sign">
-                <input v-model="userName" placeholder="UserName을 입력하세요.">
+                <input v-model="userName" placeholder="UserName을 입력하세요." autofocus>
             </form>
             <button class="btn" v-on:click="onSignIn()">Sign In</button>
             <button class="btn" v-on:click="onSignUp()">Sign Up</button>

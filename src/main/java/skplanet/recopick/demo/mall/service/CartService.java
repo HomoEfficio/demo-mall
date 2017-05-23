@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import skplanet.recopick.demo.mall.domain.Cart;
 import skplanet.recopick.demo.mall.domain.CartItem;
 import skplanet.recopick.demo.mall.domain.CartItemId;
@@ -22,6 +23,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional
 public class CartService {
 
     @NonNull private final CartRepository cartRepository;
@@ -47,5 +49,9 @@ public class CartService {
         persistedCart.setCartItems(cart.getCartItems());
 
         return persistedCart.getId();
+    }
+
+    public Optional<Cart> findCartByMember(Member member) {
+        return cartRepository.findByMember(member);
     }
 }

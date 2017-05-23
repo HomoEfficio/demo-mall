@@ -23,7 +23,7 @@ const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
 new Vue({
     el: '#app',
     data: {
-        userName: document.location.href.substring(document.location.href.lastIndexOf('/') + 1),
+        userName: '',
         total: 0,
         items: [],
         cart: [],
@@ -31,6 +31,18 @@ new Vue({
         newSearch: 'anime',
         lastSearch: '',
         loading: false
+    },
+    created() {
+        this.userName = document.location.href.substring(document.location.href.lastIndexOf('/') + 1);
+        console.log('in main.js/created(), this.userName:' + this.userName);
+        axios.get('/api/carts/' + this.userName)
+            .then(res => {
+                console.log('carts:', res);
+                // this.cart = res.data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
     },
     methods: {
         appendItems() {

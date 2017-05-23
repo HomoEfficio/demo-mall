@@ -10,14 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.Cart;
+import skplanet.recopick.demo.mall.domain.CartItem;
+import skplanet.recopick.demo.mall.domain.Member;
 import skplanet.recopick.demo.mall.domain.Product;
 import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
+import skplanet.recopick.demo.mall.exception.MemberNotFountException;
+import skplanet.recopick.demo.mall.repository.CartItemRepository;
+import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.repository.ProductRepository;
 import skplanet.recopick.demo.mall.service.CartService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author homo.efficio@gmail.com
@@ -31,6 +38,8 @@ public class ApiController {
     @NonNull private final ObjectMapper objMapper;
     @NonNull private final CartService cartService;
     @NonNull private final ProductRepository productRepository;
+    @NonNull private final CartItemRepository cartItemRepository;
+    @NonNull private final MemberRepository memberRepository;
 
     /**
      * 상품 검색
@@ -44,13 +53,9 @@ public class ApiController {
         DeferredResult<String> df = new DeferredResult<>();
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword;
-        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
-        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.set("Cache-control", "no-cache");
-        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<String> stringHttpEntity = getStringHttpEntity();
 
+        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         ListenableFuture<ResponseEntity<String>> lFuture = asyncRestTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
         lFuture.addCallback(
                 result -> {
@@ -81,13 +86,9 @@ public class ApiController {
         DeferredResult<String> df = new DeferredResult<>();
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
-        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
-        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.set("Cache-control", "no-cache");
-        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<String> stringHttpEntity = getStringHttpEntity();
 
+        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         ListenableFuture<ResponseEntity<String>> lFuture =
                 asyncRestTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
 
@@ -110,10 +111,39 @@ public class ApiController {
         return df;
     }
 
+    private HttpEntity<String> getStringHttpEntity() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
+        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.set("Cache-control", "no-cache");
+        return new HttpEntity<>(httpHeaders);
+    }
+
     @PostMapping("/carts/{userName}")
     public void saveCart(@PathVariable("userName") String userName,
                          @RequestBody Cart cart){
         Long cartId = cartService.cart(userName, cart);
         System.out.println("saved CardId: " + cartId);
+    }
+
+    @GetMapping("/carts/{userName}")
+    public ResponseEntity<Cart> findCart(@PathVariable("userName") String userName) {
+        Optional<Member> memberOptional = memberRepository.findByUserName(userName);
+        Member member = memberOptional.orElseThrow(MemberNotFountException::new);
+
+        Optional<Cart> cartOptional = cartService.findCartByMember(member);
+        Cart cart = cartOptional.orElseGet(() -> {
+            Cart cart1 = new Cart();
+            cart1.setMember(member);
+            cart1.setCartItems(new ArrayList<CartItem>());
+            return cart1;
+        });
+
+//        if (!Objects.isNull(cart.getId())) {
+//            List<CartItem> cartItems = cartItemRepository.findCartItemsByCart(cart);
+//            cart.setCartItems(cartItems);
+//        }
+
+        return ResponseEntity.ok(cart);
     }
 }
