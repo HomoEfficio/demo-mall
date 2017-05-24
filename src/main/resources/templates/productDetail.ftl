@@ -1,5 +1,6 @@
 <#-- RecoPick의 위젯을 테스트 할 때는 나누어진 페이지가 편리 -->
 <#-- 상품 상세 보기를 별도 페이지로 렌더링 하기 위해 Freemarker를 사용한 서버쪽 렌더링으로 구현 -->
+<#-- Todo: productDetail.ftl 로딩 후 다시 ajax로 필요한 정보를 요청하는 방식으로 js 분리 가능. main.js 참고 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -159,7 +160,7 @@ new Vue({
                     birthyear: RECO_BIRTHYEAR
                 }
             });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
         inc: function(i) {
             var current = this.cart[i];
@@ -167,7 +168,7 @@ new Vue({
             current.amounts = current.product.productPrice * current.quantity;
             this.total += current.product.productPrice;
             this.sendLog('basket', { msg: 'inc' });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
         dec: function(i) {
             var current = this.cart[i];
@@ -179,9 +180,9 @@ new Vue({
                 // Todo 개수가 0이 될 때 DB에서 해당 CartItem을 삭제해줘야 함
             }
             this.sendLog('basket', { msg: 'dec' });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
-        sendCurrentCart() {
+        saveCurrentCart() {
             axios.post('/api/carts/' + this.userName,
                     {
                         member: {

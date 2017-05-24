@@ -37,11 +37,11 @@ new Vue({
         console.log('in main.js/created(), this.userName:' + this.userName);
         axios.get('/api/carts/' + this.userName)
             .then(res => {
-                console.log('carts:', res);
-                // this.cart = res.data;
+console.log('carts:', res);
+                this.cart = res.data.cartItems;
             })
             .catch(err => {
-                console.log(err);
+console.log(err);
             });
     },
     methods: {
@@ -145,7 +145,7 @@ console.log(res);
                     birthyear: RECO_BIRTHYEAR
                 }
             });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
         inc: function(i) {
             var current = this.cart[i];
@@ -164,7 +164,7 @@ console.log(res);
                     birthyear: RECO_BIRTHYEAR
                 }
             });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
         dec: function(i) {
             var current = this.cart[i];
@@ -186,7 +186,7 @@ console.log(res);
                     birthyear: RECO_BIRTHYEAR
                 }
             });
-            this.sendCurrentCart();
+            this.saveCurrentCart();
         },
         onOrder: function(cart) {
             this.convertToOrderItems(cart);
@@ -206,7 +206,7 @@ console.log(res);
         sendLog: function(action, payload) {
             console.log(action, payload);
         },
-        sendCurrentCart() {
+        saveCurrentCart() {
             axios.post('/api/carts/' + this.userName,
                 {
                     member: {
