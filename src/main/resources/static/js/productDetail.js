@@ -171,6 +171,9 @@ new Vue({
                 item.total_sales = item.price * item.count;
                 // item.order_no = Math.floor(Math.random()*(10000000000-1000000000)+1000000000).toString();
             }
+        },
+        gotoMain(userName) {
+            document.location.href = '/main/' + userName;
         }
     },
     computed: {

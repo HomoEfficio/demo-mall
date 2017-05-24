@@ -11,7 +11,7 @@
 <body>
 <div id="app">
     <div class="header">
-        <h1>RecoPick Demo Mall</h1>
+        <h1 class="link" @click="gotoMain('${Session.userName}')">RecoPick Demo Mall</h1>
     </div>
     <div class="main">
         <div class="products">
