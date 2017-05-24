@@ -33,9 +33,7 @@ new Vue({
         loading: false
     },
     created() {
-        this.userName = document.location.href.substring(document.location.href.lastIndexOf('/') + 1);
-        console.log('in main.js/created(), this.userName:' + this.userName);
-        axios.get('/api/carts/' + this.userName)
+        axios.get('/api/carts')
             .then(res => {
 console.log('carts:', res);
                 this.cart = res.data.cartItems;

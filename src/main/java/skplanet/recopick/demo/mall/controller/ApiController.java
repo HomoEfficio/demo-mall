@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -21,6 +22,7 @@ import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.repository.ProductRepository;
 import skplanet.recopick.demo.mall.service.CartService;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class ApiController {
      */
     @GetMapping("/search/{keyword}")
     public DeferredResult<String> search11st(@PathVariable("keyword") String keyword) {
+
         DeferredResult<String> df = new DeferredResult<>();
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword;
@@ -83,6 +86,7 @@ public class ApiController {
 
     @GetMapping("/products/{productCode}")
     public DeferredResult<String> find(@PathVariable("productCode") String productCode) {
+
         DeferredResult<String> df = new DeferredResult<>();
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
@@ -112,6 +116,7 @@ public class ApiController {
     }
 
     private HttpEntity<String> getStringHttpEntity() {
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
         httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -119,16 +124,16 @@ public class ApiController {
         return new HttpEntity<>(httpHeaders);
     }
 
-    @PostMapping("/carts/{userName}")
-    public void saveCart(@PathVariable("userName") String userName,
-                         @RequestBody Cart cart){
-        Long cartId = cartService.cart(userName, cart);
+    @PostMapping("/carts")
+    public void saveCart(@RequestBody Cart cart, HttpSession session){
+        Long cartId = cartService.cart((String)session.getAttribute("userName"), cart);
         System.out.println("saved CardId: " + cartId);
     }
 
-    @GetMapping("/carts/{userName}")
-    public ResponseEntity<Cart> findCart(@PathVariable("userName") String userName) {
-        Optional<Member> memberOptional = memberRepository.findByUserName(userName);
+    @GetMapping("/carts")
+    public ResponseEntity<Cart> findCart(HttpSession session) {
+
+        Optional<Member> memberOptional = memberRepository.findByUserName((String)session.getAttribute("userName"));
         Member member = memberOptional.orElseThrow(MemberNotFountException::new);
 
         Optional<Cart> cartOptional = cartService.findCartByMember(member);
@@ -138,11 +143,6 @@ public class ApiController {
             cart1.setCartItems(new ArrayList<CartItem>());
             return cart1;
         });
-
-//        if (!Objects.isNull(cart.getId())) {
-//            List<CartItem> cartItems = cartItemRepository.findCartItemsByCart(cart);
-//            cart.setCartItems(cartItems);
-//        }
 
         return ResponseEntity.ok(cart);
     }

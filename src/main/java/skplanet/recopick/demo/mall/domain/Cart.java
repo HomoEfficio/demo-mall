@@ -37,6 +37,7 @@ public class Cart extends BaseEntity implements Serializable {
     // 모든 필드의 값이 null이 됨
     // 따라서 FetchType.EAGER 적용
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER)
+    @OrderBy("created_at asc")
     private List<CartItem> cartItems;
 
     @Override

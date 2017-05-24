@@ -41,8 +41,8 @@
             <h2>Shopping Cart</h2>
             <transition-group name="fade" tag="ul">
                 <li class="cart-item" v-for="(item, index) in cart" v-bind:key="index">
-                    <div class="item-title">{{ item.productName }}</div>
-                    <span class="item-qty">{{ item.productPrice }} * {{ item.quantity }}</span>
+                    <div class="item-title">{{ item.product.productName }}</div>
+                    <span class="item-qty">{{ item.product.productPrice }} * {{ item.quantity }}</span>
                     <button class="btn" v-on:click="inc(index)">+</button>
                     <button class="btn" v-on:click="dec(index)">-</button>
                 </li>
@@ -109,6 +109,15 @@ new Vue({
         this.product.shipFee = '${product.shipFee}';
         this.product.sellSatisfaction = '${product.sellSatisfaction}';
         this.product.sellGrade = '${product.sellGrade}';
+
+        axios.get('/api/carts')
+                .then(res => {
+                    console.log('carts:', res);
+                    this.cart = res.data.cartItems;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
     },
     methods: {
         appendItems() {
@@ -183,7 +192,7 @@ new Vue({
             this.saveCurrentCart();
         },
         saveCurrentCart() {
-            axios.post('/api/carts/' + this.userName,
+            axios.post('/api/carts',
                     {
                         member: {
                             userName: this.userName
