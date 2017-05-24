@@ -26,7 +26,9 @@ new Vue({
         userName: '',
         total: 0,
         items: [],
-        cart: [],
+        cart: {
+            cartItems: []
+        },
         results: [],
         newSearch: 'anime',
         lastSearch: '',
@@ -36,7 +38,8 @@ new Vue({
         axios.get('/api/carts')
             .then(res => {
 console.log('carts:', res);
-                this.cart = res.data.cartItems;
+                this.cart = res.data;
+                // this.cart.cartItems = res.data.cartItems;
             })
             .catch(err => {
 console.log(err);
@@ -55,7 +58,6 @@ console.log(err);
                 this.loading = true;
                 axios.get('/api/search/'.concat(this.newSearch))
                     .then(res => {
-console.log(res);
                         this.lastSearch = this.newSearch;
                         this.results = res.data;
                         this.appendItems();
@@ -85,8 +87,8 @@ console.log(res);
             var item = this.items[index];
             this.total += item.productPrice;
             var found = false;
-            for (let i = 0, len = this.cart.length; i < len; i++) {
-                let currentItem = this.cart[i];
+            for (let i = 0, len = this.cart.cartItems.length; i < len; i++) {
+                let currentItem = this.cart.cartItems[i];
                 if (currentItem.product.productCode === item.productCode) {
                     currentItem.quantity++;
                     currentItem.amounts = currentItem.product.productPrice * currentItem.quantity;
@@ -95,7 +97,7 @@ console.log(res);
                 }
             }
             if (!found) {
-                this.cart.push({
+                this.cart.cartItems.push({
                     product: {
                         productCode: item.productCode,
                         productName: item.productName,
@@ -136,7 +138,7 @@ console.log(res);
                 uid: RECO_UID,
                 ref: RECO_REF,
                 url: RECO_URL,
-                items: this.cart,
+                items: this.cart.cartItems,
                 user: {
                     mid: RECO_MID,
                     gender: RECO_GENDER,
@@ -146,7 +148,7 @@ console.log(res);
             this.saveCurrentCart();
         },
         inc: function(i) {
-            var current = this.cart[i];
+            var current = this.cart.cartItems[i];
             current.quantity++;
             current.amounts = current.product.productPrice * current.quantity;
             this.total += current.product.productPrice;
@@ -155,7 +157,7 @@ console.log(res);
                 uid: RECO_UID,
                 ref: RECO_REF,
                 url: RECO_URL,
-                items: this.cart,
+                items: this.cart.cartItems,
                 user: {
                     mid: RECO_MID,
                     gender: RECO_GENDER,
@@ -165,19 +167,19 @@ console.log(res);
             this.saveCurrentCart();
         },
         dec: function(i) {
-            var current = this.cart[i];
+            var current = this.cart.cartItems[i];
             current.quantity--;
             current.amounts = current.product.productPrice * current.quantity;
             this.total -= current.product.productPrice;
             if (current.quantity <= 0) {
-                this.cart.splice(i, 1);
+                this.cart.cartItems.splice(i, 1);
             }
             this.sendLog('basket', {
                 service_id: RECO_SERVICE_ID,
                 uid: RECO_UID,
                 ref: RECO_REF,
                 url: RECO_URL,
-                items: this.cart,
+                items: this.cart.cartItems,
                 user: {
                     mid: RECO_MID,
                     gender: RECO_GENDER,
@@ -193,7 +195,7 @@ console.log(res);
                 uid: RECO_UID,
                 ref: RECO_REF,
                 url: RECO_URL,
-                items: this.cart,
+                items: this.cart.cartItems,
                 user: {
                     mid: RECO_MID,
                     gender: RECO_GENDER,
@@ -205,13 +207,9 @@ console.log(res);
             console.log(action, payload);
         },
         saveCurrentCart() {
-            axios.post('/api/carts/' + this.userName,
-                {
-                    member: {
-                        userName: this.userName
-                    },
-                    cartItems: this.cart
-                })
+            // axios.post('/api/carts/' + this.userName,
+console.log(this.cart.cartItems);
+            axios.post('/api/carts', this.cart)
                 .then(res => {
                     console.log(res);
                 })

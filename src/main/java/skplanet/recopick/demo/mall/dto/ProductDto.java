@@ -23,6 +23,8 @@ public class ProductDto {
 
     private String addImage2;
 
+    private String addImage3;
+
     private String point;
 
     private String chip;

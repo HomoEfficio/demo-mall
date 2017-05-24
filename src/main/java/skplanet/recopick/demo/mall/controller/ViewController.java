@@ -63,26 +63,25 @@ public class ViewController {
     public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv, HttpServletRequest request) throws IOException {
         mv.setViewName("productDetail");
 
-        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
-        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.set("Cache-control", "no-cache");
-        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
-
-        ResponseEntity<String> reProductInfoDto =
-                restTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
-
-        ProductInfoResultContainerDto resContainerDto =
-                objMapper.readValue(reProductInfoDto.getBody(),
-                        ProductInfoResultContainerDto.class);
-        ProductInfoResponseDto productInfoResponseDto = resContainerDto.getProductInfoResponse();
-        ProductDto productDto = productInfoResponseDto.getProduct();
-        mv.addObject("product", productDto);
-        String price = productDto.getProductPrice().getPrice();
-        mv.addObject("productPrice", getIntPriceFrom(price));
-//        mv.addObject("userName", request.getSession().getAttribute("userName"));
+//        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
+//        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        httpHeaders.set("Cache-control", "no-cache");
+//        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
+//
+//        ResponseEntity<String> reProductInfoDto =
+//                restTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
+//
+//        ProductInfoResultContainerDto resContainerDto =
+//                objMapper.readValue(reProductInfoDto.getBody(),
+//                        ProductInfoResultContainerDto.class);
+//        ProductInfoResponseDto productInfoResponseDto = resContainerDto.getProductInfoResponse();
+//        ProductDto productDto = productInfoResponseDto.getProduct();
+//        mv.addObject("product", productDto);
+//        String price = productDto.getProductPrice().getPrice();
+//        mv.addObject("productPrice", getIntPriceFrom(price));
 
         return mv;
     }

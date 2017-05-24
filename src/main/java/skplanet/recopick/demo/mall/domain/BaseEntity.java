@@ -1,5 +1,6 @@
 package skplanet.recopick.demo.mall.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,10 +25,12 @@ public abstract class BaseEntity implements Serializable {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
+    @JsonIgnore
     private LocalDateTime createdDateTime;
 
     @LastModifiedDate
     @Column(name = "last_modified_at", updatable = true)
+    @JsonIgnore
     private LocalDateTime lastModifiedDateTime;
 
 //    @CreatedBy

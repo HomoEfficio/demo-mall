@@ -32,7 +32,7 @@ public class CartService {
     @NonNull private final MemberRepository memberRepository;
     @NonNull private final CartItemRepository cartItemRepository;
 
-    public Long cart(String userName, Cart cart) {
+    public Long save(String userName, Cart cart) {
 
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
         Member member = memberOptional.orElseThrow(MemberNotFountException::new);

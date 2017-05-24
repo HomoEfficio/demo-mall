@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.HttpSessionRequiredException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -125,8 +125,11 @@ public class ApiController {
     }
 
     @PostMapping("/carts")
-    public void saveCart(@RequestBody Cart cart, HttpSession session){
-        Long cartId = cartService.cart((String)session.getAttribute("userName"), cart);
+    public void saveCart(@RequestBody Cart cart, BindingResult bindingResult, HttpSession session){
+        if (bindingResult.hasErrors()) {
+            throw new RuntimeException("Cart Binding Error");
+        }
+        Long cartId = cartService.save((String)session.getAttribute("userName"), cart);
         System.out.println("saved CardId: " + cartId);
     }
 
