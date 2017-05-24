@@ -1,6 +1,3 @@
-/**
- * Created by 1003604 on 2017. 5. 18..
- */
 const LOAD_NUM = 10;
 const RECO_SERVICE_ID = '543';
 const RECO_REF = 'http://dev.recopick.com/index.html';
@@ -32,7 +29,8 @@ new Vue({
         results: [],
         newSearch: 'anime',
         lastSearch: '',
-        loading: false
+        loading: false,
+        addedItem: {}
     },
     created() {
         axios.get('/api/carts')
@@ -84,109 +82,7 @@ console.log(err);
             document.location.href = '/products/' + this.items[index].productCode;
         },
         addToCart: function(index) {
-            var item = this.items[index];
-            this.total += item.productPrice;
-            var found = false;
-            for (let i = 0, len = this.cart.cartItems.length; i < len; i++) {
-                let currentItem = this.cart.cartItems[i];
-                if (currentItem.product.productCode === item.productCode) {
-                    currentItem.quantity++;
-                    currentItem.amounts = currentItem.product.productPrice * currentItem.quantity;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                this.cart.cartItems.push({
-                    product: {
-                        productCode: item.productCode,
-                        productName: item.productName,
-                        productPrice: item.productPrice,
-                        productImage: item.productImage,
-                        // image100: item.productImage,
-                        // image110: item.productImage,
-                        // image120: item.productImage,
-                        // image130: item.productImage,
-                        // image140: item.productImage,
-                        // image150: item.productImage,
-                        // image170: item.productImage,
-                        // image200: item.productImage,
-                        // image250: item.productImage,
-                        // image270: item.productImage,
-                        // image300: item.productImage,
-                        // text1: item.text1,
-                        // text2: item.text2,
-                        // sellerNick: item.sellerNick,
-                        // seller: item.seller,
-                        // sellerGrd: item.sellerGrd,
-                        // rating: item.rating,
-                        // detailPageUrl: item.detailPageUrl,
-                        // salePrice: item.salePrice,
-                        // delivery: item.delivery,
-                        // reviewCount: item.reviewCount,
-                        // buySatisfy: item.buySatisfy,
-                        // minorYn: item.minorYn,
-                        // benefit: item.benefit,
-                    },
-                    quantity: 1,
-                    amounts: item.productPrice * 1
-                });
-                // Todo: cart 아이템을 DB에 저장(cart 비우고 현재 카트 아이템으로 insert)
-            }
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-            this.saveCurrentCart();
-        },
-        inc: function(i) {
-            var current = this.cart.cartItems[i];
-            current.quantity++;
-            current.amounts = current.product.productPrice * current.quantity;
-            this.total += current.product.productPrice;
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-            this.saveCurrentCart();
-        },
-        dec: function(i) {
-            var current = this.cart.cartItems[i];
-            current.quantity--;
-            current.amounts = current.product.productPrice * current.quantity;
-            this.total -= current.product.productPrice;
-            if (current.quantity <= 0) {
-                this.cart.cartItems.splice(i, 1);
-            }
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-            this.saveCurrentCart();
+            this.addedItem = this.items[index];
         },
         onOrder: function(cart) {
             this.convertToOrderItems(cart);
@@ -205,17 +101,6 @@ console.log(err);
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
-        },
-        saveCurrentCart() {
-            // axios.post('/api/carts/' + this.userName,
-console.log(this.cart.cartItems);
-            axios.post('/api/carts', this.cart)
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {
