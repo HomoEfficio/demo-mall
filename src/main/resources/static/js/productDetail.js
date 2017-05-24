@@ -29,7 +29,8 @@ new Vue({
         results: [],
         newSearch: 'anime',
         lastSearch: '',
-        loading: false
+        loading: false,
+        addedItem: {}  // cart 컴포넌트에서 사용되는 변수
     },
     created() {
         // this.userName = '${Session.userName}';
@@ -72,7 +73,6 @@ new Vue({
 
         axios.get('/api/carts')
             .then(res => {
-                console.log('carts:', res);
                 this.cart = res.data;
                 // this.cart.cartItems = res.data.cartItems;
             })
@@ -88,79 +88,7 @@ new Vue({
             }
         },
         addToCart: function() {
-            var item = this.product;
-            this.total += item.productPrice;
-            var found = false;
-            for (var i = 0, len = this.cart.cartItems.length; i < len; i++) {
-                let currentItem = this.cart.cartItems[i];
-                if (currentItem.product.productCode === item.productCode) {
-                    currentItem.quantity++;
-                    currentItem.amounts = currentItem.productPrice * currentItem.quantity;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                this.cart.cartItems.push({
-                    product: {
-                        productCode: item.productCode,
-                        productName: item.productName,
-                        productPrice: item.productPrice,
-                        productImage: item.basicImage,
-                        points: item.point,
-                        chip: item.chip,
-                        installment: item.installment,
-                        shipFee: item.shipFee,
-                        sellSatisfaction: item.sellSatisfaction,
-                        sellGrade: item.sellGrade,
-                    },
-                    quantity: 1,
-                    amounts: item.productPrice * 1
-                });
-            }
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-            this.saveCurrentCart();
-        },
-        inc: function(i) {
-            var current = this.cart.cartItems[i];
-            current.quantity++;
-            current.amounts = current.product.productPrice * current.quantity;
-            this.total += current.product.productPrice;
-            this.sendLog('basket', { msg: 'inc' });
-            this.saveCurrentCart();
-        },
-        dec: function(i) {
-            var current = this.cart.cartItems[i];
-            current.quantity--;
-            current.amounts = current.product.productPrice * current.quantity;
-            this.total -= current.product.productPrice;
-            if (current.quantity <= 0) {
-                this.cart.cartItems.splice(i, 1);
-                // Todo 개수가 0이 될 때 DB에서 해당 CartItem을 삭제해줘야 함
-            }
-            this.sendLog('basket', { msg: 'dec' });
-            this.saveCurrentCart();
-        },
-        saveCurrentCart() {
-            console.log('in productDetail.js/saveCurrentCart():', this.cart);
-            axios.post('/api/carts', this.cart)
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            this.addedItem = this.product;
         },
         sendLog: function(action, payload) {
             console.log(action, payload);

@@ -33,17 +33,13 @@ Vue.component('demo-cart', {
     props: ['added-item'],
     watch: {
         addedItem(addedItem) {
-            console.log('addToCart invoked');
-            // 여기에서 this.method 호출
             this.addToCart(addedItem);
         }
     },
     created() {
         axios.get('/api/carts')
             .then(res => {
-                console.log('carts:', res);
                 this.cart = res.data;
-                // this.cart.cartItems = res.data.cartItems;
             })
             .catch(err => {
                 console.log(err);
@@ -51,7 +47,6 @@ Vue.component('demo-cart', {
     },
     methods: {
         addToCart: function(addedItem) {
-            // var item = this.items[index];
             let item = addedItem;
             this.total += item.productPrice;
             var found = false;
@@ -160,8 +155,6 @@ Vue.component('demo-cart', {
             console.log(action, payload);
         },
         saveCurrentCart() {
-            // axios.post('/api/carts/' + this.userName,
-            console.log(this.cart.cartItems);
             axios.post('/api/carts', this.cart)
                 .then(res => {
                     console.log(res);

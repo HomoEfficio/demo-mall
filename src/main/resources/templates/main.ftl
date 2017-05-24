@@ -12,7 +12,7 @@
     <div class="header">
         <h1>RecoPick Demo Mall</h1>
         <form class="searchbar" v-on:submit.prevent="onSearch">
-            <input v-model="newSearch" placeholder="Search for posters">
+            <input v-model="newSearch" placeholder="Search for posters" autofocus>
             <input type="submit" value="Search" class="btn">
         </form>
     </div>

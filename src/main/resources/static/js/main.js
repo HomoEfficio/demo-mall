@@ -27,20 +27,18 @@ new Vue({
             cartItems: []
         },
         results: [],
-        newSearch: 'anime',
+        newSearch: '',  // 뒤로 가기 시 검색어 유지에 사용
         lastSearch: '',
         loading: false,
-        addedItem: {}
+        addedItem: {} // cart-component에서 사용되는 변수
     },
     created() {
         axios.get('/api/carts')
             .then(res => {
-console.log('carts:', res);
                 this.cart = res.data;
-                // this.cart.cartItems = res.data.cartItems;
             })
             .catch(err => {
-console.log(err);
+                console.log(err);
             });
     },
     methods: {
