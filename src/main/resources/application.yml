@@ -1,6 +1,19 @@
 spring.datasource:
-  url: jdbc:h2:mem:recopick-demo-mall;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL
-  username: sa
+  url: jdbc:mysql://mysql-dev.recopick.com:3306/recopick?zeroDateTimeBehavior=convertToNull
+  username: ubuntu
+  password: reco7788!#%
+  initialize: true
+  driverClassName: com.mysql.jdbc.Driver
+  ## Pool Info ##
+  maxActive: 10
+  initialSize: 10
+  minIdle: 5
+  testOnBorrow: true
+  validationQuery: select 1
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 600000 #10 min
+  minEvictableIdleTimeMillis: 600000  #10 min
+  validationQueryTimeout: 5
 
 spring.jpa:
     database: mysql
@@ -8,3 +21,11 @@ spring.jpa:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       hbm2ddl: update
+
+---
+spring.profiles: local
+
+spring.datasource:
+  url: jdbc:h2:mem:recopick-demo-mall;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL
+  username: sa
+
