@@ -1,5 +1,5 @@
 spring.datasource:
-  url: jdbc:mysql://mysql-dev.recopick.com:3306/recopick?zeroDateTimeBehavior=convertToNull
+  url: jdbc:mysql://mysql-dev.recopick.com:3306/reco-demo-mall?zeroDateTimeBehavior=convertToNull
   username: ubuntu
   password: reco7788!#%
   initialize: true
@@ -15,12 +15,21 @@ spring.datasource:
   minEvictableIdleTimeMillis: 600000  #10 min
   validationQueryTimeout: 5
 
+#spring.datasource:
+#  url: jdbc:h2:mem:recopick-demo-mall;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL
+#  username: sa
+
+#spring:
+#  h2.console.enabled: false
+
+
 spring.jpa:
     database: mysql
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-      hbm2ddl: update
 
 ---
 spring.profiles: local
