@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import skplanet.recopick.demo.mall.common.Encryptor;
 import skplanet.recopick.demo.mall.domain.Member;
 import skplanet.recopick.demo.mall.dto.ProductDto;
 import skplanet.recopick.demo.mall.dto.ProductInfoResponseDto;
@@ -21,6 +22,7 @@ import skplanet.recopick.demo.mall.repository.MemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,6 +36,7 @@ public class ViewController {
 
     @NonNull private final ObjectMapper objMapper;
     @NonNull private final MemberRepository memberRepository;
+    @NonNull private final Encryptor encryptor;
 
     @GetMapping("/")
     public String index() {
@@ -55,6 +58,8 @@ public class ViewController {
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
         Member member = memberOptional.orElseThrow(MemberNotFountException::new);
         request.getSession().setAttribute("userName", userName);
+
+        mv.addObject("mid", encryptor.sha256hash(userName));
 
         return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
     }

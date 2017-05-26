@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 @SpringBootApplication
 @EnableJpaAuditing
 @EntityScan(
@@ -24,5 +27,10 @@ public class RecopickDemoMallApplication {
 	@Bean(name = "objMapper")
 	public ObjectMapper caseInsensitiveObjectMapper() {
 		return new ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+	}
+
+	@Bean(name = "sha256md")
+	public MessageDigest sha256md() throws NoSuchAlgorithmException {
+		return MessageDigest.getInstance("SHA-256");
 	}
 }

@@ -23,7 +23,8 @@
         <h1>RecoPick Demo Mall</h1>
     </div>
     <div class="main">
-        <div class="sign">
+        <div class="sign-up">
+            <h2>회원 가입</h2>
             <form id="sign-form" class="sign">
                 <input v-model="userName" placeholder="UserName을 입력하세요." autofocus>
             </form>
