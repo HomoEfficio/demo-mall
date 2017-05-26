@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <title>RecoPick Demo Mall</title>
     <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+    <!--RecoPick 로그수집 스크립트 -->
+    <script type="text/javascript">
+        (function(w,d,n,s,e,o) {
+            w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
+            e=d.createElement(s);e.async=1;e.charset='utf-8';e.src='//static.recopick.com/dist/production.min.js';
+            o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
+        })(window, document, 'recoPick', 'script');
+        recoPick('service', 'dev.recopick.com');
+        recoPick('sendLog','visit');
+    </script>
+    <!--RecoPick 로그수집 스크립트 -->
 </head>
 <body>
 
