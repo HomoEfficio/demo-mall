@@ -6,8 +6,8 @@ new Vue({
     data: {
         mainView: '/main',
         userName: '',
-        // form: document.getElementById('sign-form'),
-        form: '',
+        birthYear: '',
+        gender: ''
     },
     methods: {
         onSignIn() {
@@ -18,7 +18,11 @@ new Vue({
         onSignUp(endPoint) {
             console.log('onSignUp');
             // POST /members/{memberName}
-            axios.post('/members/' + this.userName)
+            axios.post('/members/', {
+                userName: this.userName,
+                birthYear: this.birthYear,
+                gender: this.gender
+            })
                 .then(res => {
                     console.log(res);
                     this.onSignIn();

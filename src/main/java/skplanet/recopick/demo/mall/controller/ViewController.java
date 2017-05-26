@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import skplanet.recopick.demo.mall.common.Encryptor;
@@ -21,6 +18,7 @@ import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Objects;
@@ -43,12 +41,11 @@ public class ViewController {
         return "index";
     }
 
-    @PostMapping("/members/{userName}")
+    @PostMapping("/members")
     @ResponseBody
-    public ResponseEntity<Member> signUp(@PathVariable("userName") String userName) {
-        Member member = memberRepository.save(new Member(userName));
+    public ResponseEntity<Member> signUp(@RequestBody @NotNull Member member) {
         Objects.requireNonNull(member, "Member is null");
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(memberRepository.save(member));
     }
 
     @GetMapping("/main/{userName}")

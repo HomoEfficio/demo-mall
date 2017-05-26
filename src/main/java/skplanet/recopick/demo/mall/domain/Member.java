@@ -26,6 +26,14 @@ public class Member extends BaseEntity implements Serializable {
     @Column(name = "user_name", unique = true)
     private String userName;
 
+    @NotNull
+    @Column(name = "birty_year")
+    private String birthYear;
+
+    @NotNull
+    @Column(name = "gender")
+    private String gender;
+
     @Column(unique = true)
     private String uid;
 
@@ -43,15 +51,12 @@ public class Member extends BaseEntity implements Serializable {
 
         Member member = (Member) o;
 
-        if (id != null ? !id.equals(member.id) : member.id != null) return false;
         return userName.equals(member.userName);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + userName.hashCode();
-        return result;
+        return userName.hashCode();
     }
 
     //    @OneToOne

@@ -6,6 +6,19 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://unpkg.com/vue"></script>
     <script src="/js/component-cart.js"></script>
+    <#--<!--RecoPick 로그수집 스크립트 &ndash;&gt;-->
+    <#--<script type="text/javascript">-->
+        <#--(function(w,d,n,s,e,o) {-->
+            <#--w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};-->
+            <#--e=d.createElement(s);e.async=1;e.charset='utf-8';e.src='//static.recopick.com/dist/production.min.js';-->
+            <#--o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);-->
+        <#--})(window, document, 'recoPick', 'script');-->
+        <#--recoPick('service', 'dev.recopick.com');-->
+        <#--recoPick('setMID', ${mid});-->
+        <#--recoPick('setUserInfo',{ birthyear:‘출생연도’, gender:'성별’});-->
+        <#--recoPick('sendLog','visit');-->
+    <#--</script>-->
+    <#--<!--RecoPick 로그수집 스크립트 &ndash;&gt;-->
 </head>
 <body>
 <div id="app">
