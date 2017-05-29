@@ -57,6 +57,8 @@ public class ViewController {
         request.getSession().setAttribute("userName", userName);
 
         mv.addObject("mid", encryptor.sha256hash(userName));
+        mv.addObject("birthYear", member.getBirthYear());
+        mv.addObject("gender", member.getGender());
 
         return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
     }

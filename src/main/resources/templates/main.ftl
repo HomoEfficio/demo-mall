@@ -5,26 +5,27 @@
     <title>RecoPick Demo Mall</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://unpkg.com/vue"></script>
+    <!--RecoPick 로그수집 스크립트 -->
+    <script type="text/javascript">
+        (function(w,d,n,s,e,o) {
+            w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
+            e=d.createElement(s);e.async=1;e.charset='utf-8';e.src='//static.recopick.com/dist/production.min.js';
+            o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
+        })(window, document, 'recoPick', 'script');
+        recoPick('service', 'dev.recopick.com');
+        recoPick('setUID', '${Session.userName}');
+        recoPick('setMID', '${mid}');
+        recoPick('setUserInfo',{ birthyear:"${birthYear}", gender:"${gender}"});
+        recoPick('sendLog','visit');
+    </script>
+    <!--RecoPick 로그수집 스크립트 -->
     <script src="/js/component-cart.js"></script>
-    <#--<!--RecoPick 로그수집 스크립트 &ndash;&gt;-->
-    <#--<script type="text/javascript">-->
-        <#--(function(w,d,n,s,e,o) {-->
-            <#--w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};-->
-            <#--e=d.createElement(s);e.async=1;e.charset='utf-8';e.src='//static.recopick.com/dist/production.min.js';-->
-            <#--o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);-->
-        <#--})(window, document, 'recoPick', 'script');-->
-        <#--recoPick('service', 'dev.recopick.com');-->
-        <#--recoPick('setMID', ${mid});-->
-        <#--recoPick('setUserInfo',{ birthyear:‘출생연도’, gender:'성별’});-->
-        <#--recoPick('sendLog','visit');-->
-    <#--</script>-->
-    <#--<!--RecoPick 로그수집 스크립트 &ndash;&gt;-->
 </head>
 <body>
 <div id="app">
     <div class="header">
         <h1>RecoPick Demo Mall</h1>
-        <form class="searchbar" v-on:submit.prevent="onSearch">
+        <form class="searchbar" v-on:submit.prevent="onSearch('${mid}', '${birthYear}', '${gender}')">
             <input v-model="newSearch" placeholder="Search for posters" autofocus>
             <input type="submit" value="Search" class="btn">
         </form>

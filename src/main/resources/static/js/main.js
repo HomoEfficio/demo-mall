@@ -2,20 +2,20 @@ const LOAD_NUM = 10;
 const RECO_SERVICE_ID = '543';
 const RECO_REF = 'http://dev.recopick.com/index.html';
 const RECO_URL = 'http://dev.recopick.com/index.html';
-const RECO_UID = (function() {
-    let url = document.location.href;
-    let paramString = url.substring(url.indexOf('?') + 1);
-    let params = paramString.split('&');
-    for (let i = 0, len = params.length; i < len; i++) {
-        let param = params[i];
-        if (param.trim().indexOf('uid') === 0)
-            return param.substring(param.indexOf('=') + 1);
-    }
-    return '';
-}());
-const RECO_MID = Math.floor(Math.random()*(1000000000-100000000)+100000000);
-const RECO_BIRTHYEAR = Math.floor(Math.random()*(2000-1930)+1930);
-const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
+// const RECO_UID = (function() {
+//     let url = document.location.href;
+//     let paramString = url.substring(url.indexOf('?') + 1);
+//     let params = paramString.split('&');
+//     for (let i = 0, len = params.length; i < len; i++) {
+//         let param = params[i];
+//         if (param.trim().indexOf('uid') === 0)
+//             return param.substring(param.indexOf('=') + 1);
+//     }
+//     return '';
+// }());
+// const RECO_MID = Math.floor(Math.random()*(1000000000-100000000)+100000000);
+// const RECO_BIRTHYEAR = Math.floor(Math.random()*(2000-1930)+1930);
+// const RECO_GENDER = Math.floor(Math.random()*(1-100)+100) % 2 ? 'F' : 'M';
 
 new Vue({
     el: '#app',
@@ -48,7 +48,7 @@ new Vue({
                 this.items = this.items.concat(append);
             }
         },
-        onSearch() {
+        onSearch(mid, birthYear, gender) {
             if (this.newSearch.length) {
                 this.items = [];
                 this.loading = true;
@@ -62,18 +62,19 @@ new Vue({
                     .catch(err => {
                         console.log(err);
                     });
-                this.sendLog('search', {
-                    service_id: RECO_SERVICE_ID,
-                    uid: RECO_UID,
-                    ref: RECO_REF,
-                    url: RECO_URL,
-                    q: this.newSearch,
-                    user: {
-                        mid: RECO_MID,
-                        gender: RECO_GENDER,
-                        birthyear: RECO_BIRTHYEAR
-                    }
-                });
+                // this.sendLog('search', {
+                //     service_id: RECO_SERVICE_ID,
+                //     // uid: RECO_UID,
+                //     ref: RECO_REF,
+                //     url: RECO_URL,
+                //     q: this.newSearch,
+                //     user: {
+                //         mid: mid,
+                //         gender: gender,
+                //         birthyear: birthYear
+                //     }
+                // });
+                this.sendLog('search', this.newSearch);
             }
         },
         onDetail(index) {
@@ -99,6 +100,7 @@ new Vue({
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
+            recopick('sendLog', action, payload);
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {
