@@ -48,6 +48,17 @@ Vue.component('demo-cart', {
             });
     },
     methods: {
+        cartItemsToRecoItems(cartItems) {
+            let recoItems = [];
+            for (let cartItem of cartItems) {
+                let recoItem = {
+                    id: cartItem.product.productCode,
+                    count: cartItem.quantity
+                };
+                recoItems.push(recoItem);
+            }
+            return recoItems;
+        },
         addToCart: function(addedItem) {
             let item = addedItem;
             this.total += item.productPrice;
@@ -98,14 +109,7 @@ Vue.component('demo-cart', {
                 });
                 // Todo: cart 아이템을 DB에 저장(cart 비우고 현재 카트 아이템으로 insert)
             }
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: this.uid,
-                ref: this.ref,
-                url: this.url,
-                items: this.cart.cartItems,
-                user: this.userInfo
-            });
+            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
         },
         inc: function(i) {
@@ -113,14 +117,7 @@ Vue.component('demo-cart', {
             current.quantity++;
             current.amounts = current.product.productPrice * current.quantity;
             this.total += current.product.productPrice;
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: this.uid,
-                ref: this.ref,
-                url: this.url,
-                items: this.cart.cartItems,
-                user: this.userInfo
-            });
+            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
         },
         dec: function(i) {
@@ -131,19 +128,8 @@ Vue.component('demo-cart', {
             if (current.quantity <= 0) {
                 this.cart.cartItems.splice(i, 1);
             }
-            this.sendLog('basket', {
-                service_id: RECO_SERVICE_ID,
-                uid: this.uid,
-                ref: this.ref,
-                url: this.url,
-                items: this.cart.cartItems,
-                user: this.userInfo
-            });
+            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
-        },
-        sendLog: function(action, payload) {
-            console.log(action, payload);
-            window.recoPick('sendLog', action, payload);
         },
         saveCurrentCart() {
             axios.post('/api/carts', this.cart)
