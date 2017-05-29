@@ -28,9 +28,11 @@ Vue.component('demo-cart', {
             cart: {
                 cartItems: []
             },
+            ref: document.location.href,
+            url: document.location.href
         };
     },
-    props: ['added-item'],
+    props: ['added-item', 'uid', 'userInfo'],
     watch: {
         addedItem(addedItem) {
             this.addToCart(addedItem);
@@ -98,15 +100,11 @@ Vue.component('demo-cart', {
             }
             this.sendLog('basket', {
                 service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
+                uid: this.uid,
+                ref: this.ref,
+                url: this.url,
                 items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
+                user: this.userInfo
             });
             this.saveCurrentCart();
         },
@@ -117,15 +115,11 @@ Vue.component('demo-cart', {
             this.total += current.product.productPrice;
             this.sendLog('basket', {
                 service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
+                uid: this.uid,
+                ref: this.ref,
+                url: this.url,
                 items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
+                user: this.userInfo
             });
             this.saveCurrentCart();
         },
@@ -139,20 +133,17 @@ Vue.component('demo-cart', {
             }
             this.sendLog('basket', {
                 service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
+                uid: this.uid,
+                ref: this.ref,
+                url: this.url,
                 items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
+                user: this.userInfo
             });
             this.saveCurrentCart();
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
+            window.recoPick('sendLog', action, payload);
         },
         saveCurrentCart() {
             axios.post('/api/carts', this.cart)
@@ -163,5 +154,15 @@ Vue.component('demo-cart', {
                     console.log(err);
                 });
         },
+        onOrder() {
+            axios.post('/api/order', this.cart)
+                .then(res => {
+                    console.log(res);
+                    let orderId = res.data;
+                    document.location.href = '/orders/' + orderId;
+                }).catch(err => {
+                    console.log(err);
+                });
+        }
     }
 });
