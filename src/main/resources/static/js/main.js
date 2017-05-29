@@ -1,7 +1,10 @@
 const LOAD_NUM = 10;
 const RECO_SERVICE_ID = '543';
-const RECO_REF = 'http://dev.recopick.com/index.html';
-const RECO_URL = 'http://dev.recopick.com/index.html';
+// const RECO_REF = 'http://dev.recopick.com/index.html';
+// const RECO_URL = 'http://dev.recopick.com/index.html';
+const RECO_REF = document.location.href;
+const RECO_URL = document.location.href;
+
 // const RECO_UID = (function() {
 //     let url = document.location.href;
 //     let paramString = url.substring(url.indexOf('?') + 1);
@@ -21,6 +24,8 @@ new Vue({
     el: '#app',
     data: {
         userName: '',
+        uid: window.demoUserUid,
+        userInfo: window.demoUserInfo,
         total: 0,
         items: [],
         cart: {
@@ -81,7 +86,22 @@ new Vue({
             document.location.href = '/products/' + this.items[index].productCode;
         },
         addToCart: function(index) {
+console.log('demoUserUid:', this.uid);
+console.log('demoUserInfo:', this.userInfo);
             this.addedItem = this.items[index];
+            this.sendLog('basket', {
+                service_id: RECO_SERVICE_ID,
+                uid: this.uid,
+                ref: RECO_REF,
+                url: RECO_URL,
+                items: this.cart.cartItems,
+                // user: {
+                //     mid: RECO_MID,
+                //     gender: RECO_GENDER,
+                //     birthyear: RECO_BIRTHYEAR
+                // }
+                user: this.userInfo
+            });
         },
         onOrder: function(cart) {
             this.convertToOrderItems(cart);
@@ -100,7 +120,7 @@ new Vue({
         },
         sendLog: function(action, payload) {
             console.log(action, payload);
-            recopick('sendLog', action, payload);
+            window.recoPick('sendLog', action, payload);
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {

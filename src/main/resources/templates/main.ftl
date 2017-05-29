@@ -14,11 +14,20 @@
         })(window, document, 'recoPick', 'script');
         recoPick('service', 'dev.recopick.com');
         recoPick('setUID', '${Session.userName}');
+//        recoPick('fetchUID', (uid)=>console.log('fetched UID:', uid));  // uid 설정 실제로 확인
         recoPick('setMID', '${mid}');
         recoPick('setUserInfo',{ birthyear:"${birthYear}", gender:"${gender}"});
         recoPick('sendLog','visit');
     </script>
     <!--RecoPick 로그수집 스크립트 -->
+    <script>
+    window.demoUserUid = '${Session.userName}';
+    window.demoUserInfo = {
+        mid: '${mid}',
+        birthYear: '${birthYear}',
+        gender: '${gender}'
+    };
+    </script>
     <script src="/js/component-cart.js"></script>
 </head>
 <body>
@@ -49,7 +58,6 @@
                         <span v-on:click="onDetail(index)">{{ item.productName }}</span>
                     </h4>
                     <p>Price: <strong>{{ item.productPrice }}</strong></p>
-                    <#--<button class="btn add-to-cart" v-on:click="addToCart(index)">Add to cart</button>-->
                     <button class="btn add-to-cart" v-on:click="addToCart(index)">Add to cart</button>
                 </div>
             </div>
@@ -76,7 +84,7 @@
             <#--<div v-if="cart.length === 0" class="empty-cart">-->
                 <#--No items in the cart-->
             <#--</div>-->
-            <demo-cart :added-item="addedItem"></demo-cart>
+            <demo-cart :added-item="addedItem" :uid="${Session.userName}" :user-info="{mid: '${mid}', birthYear: '${birthYear}', gender: '${gender}'}"></demo-cart>
         </div>
     </div>
 </div>
