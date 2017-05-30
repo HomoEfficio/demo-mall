@@ -1,26 +1,22 @@
 package skplanet.recopick.demo.mall.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import skplanet.recopick.demo.mall.common.Encryptor;
 import skplanet.recopick.demo.mall.domain.Member;
-import skplanet.recopick.demo.mall.dto.ProductDto;
-import skplanet.recopick.demo.mall.dto.ProductInfoResponseDto;
-import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
+import skplanet.recopick.demo.mall.domain.Order;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
+import skplanet.recopick.demo.mall.service.OrderService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,8 +28,8 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ViewController {
 
-    @NonNull private final ObjectMapper objMapper;
     @NonNull private final MemberRepository memberRepository;
+    @NonNull private final OrderService orderService;
     @NonNull private final Encryptor encryptor;
 
     @GetMapping("/")
@@ -66,32 +62,14 @@ public class ViewController {
     @GetMapping("/products/{productCode}")
     public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv, HttpServletRequest request) throws IOException {
         mv.setViewName("productDetail");
-
-//        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
-//        httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//        httpHeaders.set("Cache-control", "no-cache");
-//        HttpEntity<String> stringHttpEntity = new HttpEntity<>(httpHeaders);
-//
-//        ResponseEntity<String> reProductInfoDto =
-//                restTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
-//
-//        ProductInfoResultContainerDto resContainerDto =
-//                objMapper.readValue(reProductInfoDto.getBody(),
-//                        ProductInfoResultContainerDto.class);
-//        ProductInfoResponseDto productInfoResponseDto = resContainerDto.getProductInfoResponse();
-//        ProductDto productDto = productInfoResponseDto.getProduct();
-//        mv.addObject("product", productDto);
-//        String price = productDto.getProductPrice().getPrice();
-//        mv.addObject("productPrice", getIntPriceFrom(price));
-
         return mv;
     }
 
-    private Integer getIntPriceFrom(String str) {
-        return Integer.parseInt(str.substring(0, str.length() - 1)
-                                   .replaceAll(",", ""));
+    @GetMapping("/orders/{orderId}")
+    public ModelAndView findOrderById(@PathVariable("orderId") Long orderId, ModelAndView mv) {
+        mv.setViewName("orderCompleted");
+        Order order = orderService.findOne(orderId);
+        mv.addObject("order", order);
+        return mv;
     }
 }

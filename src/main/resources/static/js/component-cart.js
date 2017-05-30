@@ -19,6 +19,7 @@ Vue.component('demo-cart', {
             <div v-if="cart.length === 0" class="empty-cart">
                 No items in the cart
             </div>
+            <div><button class="pure-button pure-button-primary" @click.prevent="onOrder">주문하기</button></div>
         </div>        
     `,
     data() {
@@ -54,6 +55,18 @@ Vue.component('demo-cart', {
                 let recoItem = {
                     id: cartItem.product.productCode,
                     count: cartItem.quantity
+                };
+                recoItems.push(recoItem);
+            }
+            return recoItems;
+        },
+        orderItemsToRecoItems(orderItems) {
+            let recoItems = [];
+            for (let orderItem of orderItems) {
+                let recoItem = {
+                    id: orderItem.product.productCode,
+                    count: orderItem.quantity,
+                    total_sales: orderItem.product.productPrice * orderItem.quantity
                 };
                 recoItems.push(recoItem);
             }
@@ -107,7 +120,6 @@ Vue.component('demo-cart', {
                     quantity: 1,
                     amounts: item.productPrice * 1
                 });
-                // Todo: cart 아이템을 DB에 저장(cart 비우고 현재 카트 아이템으로 insert)
             }
             window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
@@ -141,8 +153,9 @@ Vue.component('demo-cart', {
                 });
         },
         onOrder() {
-            axios.post('/api/order', this.cart)
+            axios.post('/api/orders', this.cart)
                 .then(res => {
+                    window.recoPick('sendLog', 'order', false, this.orderItemsToRecoItems(this.cart.cartItems));
                     console.log(res);
                     let orderId = res.data;
                     document.location.href = '/orders/' + orderId;

@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>RecoPick Demo Mall</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://unpkg.com/vue"></script>
     <!--RecoPick 로그수집 스크립트 -->

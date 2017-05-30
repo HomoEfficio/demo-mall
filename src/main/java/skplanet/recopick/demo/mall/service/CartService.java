@@ -9,6 +9,7 @@ import skplanet.recopick.demo.mall.domain.Cart;
 import skplanet.recopick.demo.mall.domain.CartItem;
 import skplanet.recopick.demo.mall.domain.CartItemId;
 import skplanet.recopick.demo.mall.domain.Member;
+import skplanet.recopick.demo.mall.exception.CartNotFoundException;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.CartItemRepository;
 import skplanet.recopick.demo.mall.repository.CartRepository;
@@ -53,7 +54,17 @@ public class CartService {
         return persistedCart.getId();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Cart> findCartByMember(Member member) {
         return cartRepository.findByMember(member);
+    }
+
+    public void emptyCartItemsOf(Member member) {
+
+        Optional<Cart> cartOptional = cartRepository.findByMember(member);
+        Cart cart = cartOptional.orElseThrow(CartNotFoundException::new);
+
+        cart.getCartItems()
+                .forEach((i) -> cartItemRepository.delete(i.getCartItemId()));
     }
 }

@@ -10,22 +10,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
-import skplanet.recopick.demo.mall.domain.Cart;
-import skplanet.recopick.demo.mall.domain.CartItem;
-import skplanet.recopick.demo.mall.domain.Member;
-import skplanet.recopick.demo.mall.domain.Product;
+import skplanet.recopick.demo.mall.domain.*;
 import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
-import skplanet.recopick.demo.mall.repository.CartItemRepository;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.repository.ProductRepository;
 import skplanet.recopick.demo.mall.service.CartService;
+import skplanet.recopick.demo.mall.service.OrderService;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,9 +37,10 @@ public class ApiController {
 
     @NonNull private final ObjectMapper objMapper;
     @NonNull private final CartService cartService;
+    @NonNull private final OrderService orderService;
     @NonNull private final ProductRepository productRepository;
-    @NonNull private final CartItemRepository cartItemRepository;
     @NonNull private final MemberRepository memberRepository;
+
 
     /**
      * 상품 검색
@@ -136,8 +135,7 @@ public class ApiController {
     @GetMapping("/carts")
     public ResponseEntity<Cart> findCart(HttpSession session) {
 
-        Optional<Member> memberOptional = memberRepository.findByUserName((String)session.getAttribute("userName"));
-        Member member = memberOptional.orElseThrow(MemberNotFountException::new);
+        Member member = getPersistedMember(session);
 
         Optional<Cart> cartOptional = cartService.findCartByMember(member);
         Cart cart = cartOptional.orElseGet(() -> {
@@ -149,4 +147,22 @@ public class ApiController {
 
         return ResponseEntity.ok(cart);
     }
+
+    private Member getPersistedMember(HttpSession session) {
+        Optional<Member> memberOptional = memberRepository.findByUserName((String)session.getAttribute("userName"));
+        return memberOptional.orElseThrow(MemberNotFountException::new);
+    }
+
+    @PostMapping("/orders")
+    public Long saveOrder(@RequestBody Cart cart, HttpSession session){
+
+        Objects.requireNonNull(cart, "비어있는 장바구니로 주문 불가");
+
+        Member member = getPersistedMember(session);
+
+        Order persistedOrder = orderService.save(member, cart);
+
+        return persistedOrder.getId();
+    }
+
 }
