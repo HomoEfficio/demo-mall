@@ -38,7 +38,6 @@ new Vue({
         let productCode = href.substring(href.lastIndexOf('/') + 1);
         axios.get('/api/products/' + productCode)
             .then(res => {
-                console.log('carts:', res);
                 this.product = res.data;
                 // this.product.productCode = '${product.productCode}';
                 // this.product.productName = '${product.productName}';
@@ -53,6 +52,15 @@ new Vue({
                 // this.product.shipFee = '${product.shipFee}';
                 // this.product.sellSatisfaction = '${product.sellSatisfaction}';
                 // this.product.sellGrade = '${product.sellGrade}';
+                document.getElementById('reco-meta-title').setAttribute('content', this.product.productName);
+                document.getElementById('reco-meta-image').setAttribute('content', this.product.basicImage);
+                document.getElementById('reco-meta-price').setAttribute('content', this.product.productPrice);
+                document.getElementById('reco-meta-price-currency').setAttribute('content', 'KRW');
+                document.getElementById('reco-meta-description').setAttribute('content', this.product.productName);
+                // document.getElementById('reco-meta-author').setAttribute('content', this.product.sellerNick);
+
+console.log('sendLog-view 호출', this.product.productCode, window.recoPick);
+                window.recoPick('sendLog','view', false, {id:this.product.productCode, c1:'카테고리(대)', c2:'카테고리(중)', c3:'카테고리(소)'});
             })
             .catch(err => {
                 console.log(err);

@@ -16,10 +16,19 @@
             o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
         })(window, document, 'recoPick', 'script');
         recoPick('service', 'dev.recopick.com');
-        recoPick('sendLog','visit');
+//        recoPick('sendLog','view', {id:'상품id', c1:'카테고리(대)', c2:'카테고리(중)', c3:'카테고리(소)'});  // productDetail.js 내부로 이동
     </script>
     <!--RecoPick 로그수집 스크립트 -->
-    <script src="/js/component-cart.js"></script>
+
+
+    <!--RecoPick 상품 메타 태그 -->
+    <meta property="recopick:title" content="" id="reco-meta-title">
+    <meta property="recopick:image" content="" id="reco-meta-image">
+    <meta property="recopick:price" content="" id="reco-meta-price">
+    <meta property="recopick:price:currency" content="KRW" id="reco-meta-price-currency">
+    <meta property="recopick:description" content="" id="reco-meta-description">
+    <#--<meta property="recopick:author" content="" id="reco-meta-author">-->
+    <!--RecoPick 상품 메타 태그 -->
 </head>
 <body>
 <div id="app">
@@ -72,6 +81,8 @@
         </div>
     </div>
 </div>
+
+<script src="/js/component-cart.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/scrollMonitor.js"></script>
 <script src="/js/productDetail.js"></script>
