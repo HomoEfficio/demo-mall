@@ -17,7 +17,7 @@
 //        recoPick('fetchUID', (uid)=>console.log('fetched UID:', uid));  // uid 설정 실제로 확인
         recoPick('setMID', '${mid}');
         recoPick('setUserInfo',{ birthyear:"${birthYear}", gender:"${gender}"});
-        recoPick('sendLog','visit');
+//        recoPick('sendLog','visit');
     </script>
     <!--RecoPick 로그수집 스크립트 -->
     <script>
