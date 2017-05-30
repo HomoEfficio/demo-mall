@@ -6,12 +6,13 @@ RecoPick의 기능 검증 및 테스트에 사용할 가상의 RecoPick 고객 �
 
 ```
 curl -X GET \
-  http://apis.skplanetx.com/11st/v2/common/categories \
+  http://apis.skplanetx.com/11st/v2/common/products \
   -H 'accept: application/json' \
   -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' \
   -H 'cache-control: no-cache'
 ```
 
 ```
-curl -X GET http://apis.skplanetx.com/11st/v2/common/categories -H 'accept: application/json' -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' -H 'cache-control: no-cache'
+curl -X GET http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=sports -H 'accept: application/json' -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' -H 'cache-control: no-cache'
+curl -X GET http://apis.skplanetx.com/11st/v2/common/products/512242346 -H 'accept: application/json' -H 'appkey: 83aeb0b1-94db-3372-9364-22a13e6b6df2' -H 'cache-control: no-cache'
 ```
