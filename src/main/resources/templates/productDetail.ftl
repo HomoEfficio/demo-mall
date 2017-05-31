@@ -17,6 +17,9 @@
             o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
         })(window, document, 'recoPick', 'script');
         recoPick('service', 'dev.recopick.com');
+        recoPick('setUID', '${Session.userName}');
+        recoPick('setMID', '${mid}');
+        recoPick('setUserInfo',{ birthyear:"${birthYear}", gender:"${gender}"});
     </script>
     <!--RecoPick 로그수집 스크립트 -->
 
@@ -31,6 +34,7 @@
     <!--RecoPick 상품 메타 태그 -->
 </head>
 <body>
+
 <div id="app">
     <div class="header">
         <h1 class="link" @click="gotoMain('${Session.userName}')">RecoPick Demo Mall</h1>
@@ -61,6 +65,14 @@
         </div>
     </div>
 </div>
+<!-- RecoPick 상품상세_상단 스크립트 -->
+<div id="recopick_widget_EcbX8XTK" data-widget_id="EcbX8XTK">
+    <script>
+        (function(w,n){w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};}(window, 'recoPick'));
+        recoPick('widget', 'recopick_widget_EcbX8XTK');
+    </script>
+</div>
+<!-- RecoPick 상품상세_상단 스크립트 -->
 
 <script src="/js/component-cart.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

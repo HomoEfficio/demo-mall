@@ -15,6 +15,7 @@ import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.service.OrderService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Objects;
@@ -45,23 +46,28 @@ public class ViewController {
     }
 
     @GetMapping("/main/{userName}")
-    public ModelAndView signIn(@PathVariable("userName") String userName, HttpServletRequest request, ModelAndView mv) {
+    public ModelAndView signIn(@PathVariable("userName") String userName, HttpSession session, ModelAndView mv) {
         mv.setViewName("main");
-        // TODO: DB에서 조회 후 세션에 memberId, uid 심고 main 화면 반환
+        session.setAttribute("userName", userName);
+        setUserInfo(userName, mv);
+        return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
+    }
+
+    private void setUserInfo(String userName, ModelAndView mv) {
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
         Member member = memberOptional.orElseThrow(MemberNotFountException::new);
-        request.getSession().setAttribute("userName", userName);
 
         mv.addObject("mid", encryptor.sha256hash(userName));
         mv.addObject("birthYear", member.getBirthYear());
         mv.addObject("gender", member.getGender());
-
-        return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
     }
 
     @GetMapping("/products/{productCode}")
-    public ModelAndView find(@PathVariable("productCode") String productCode, ModelAndView mv, HttpServletRequest request) throws IOException {
+    public ModelAndView find(@PathVariable("productCode") String productCode, HttpSession session, ModelAndView mv) throws IOException {
         mv.setViewName("productDetail");
+        // 여기에서는 사용자 정보 세팅 후 화면만 리턴해주고
+        // 실제 상품 상세 정보 조회는 productDetail.js에서 ajax로 요청(ftl과 js를 분리하기 위해 이 방식 사용)
+        setUserInfo((String)session.getAttribute("userName"), mv);
         return mv;
     }
 
