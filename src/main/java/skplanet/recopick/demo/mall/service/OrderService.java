@@ -3,15 +3,13 @@ package skplanet.recopick.demo.mall.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import skplanet.recopick.demo.mall.domain.*;
-import skplanet.recopick.demo.mall.exception.MemberNotFountException;
-import skplanet.recopick.demo.mall.repository.*;
+import skplanet.recopick.demo.mall.repository.OrderItemRepository;
+import skplanet.recopick.demo.mall.repository.OrderRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author homo.efficio@gmail.com

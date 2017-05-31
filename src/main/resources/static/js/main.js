@@ -40,7 +40,7 @@ new Vue({
             if (this.newSearch.length) {
                 this.items = [];
                 this.loading = true;
-                this.sendLog('search', this.newSearch);
+                window.recoPick('sendLog', 'search', false, this.newSearch);
                 axios.get('/api/search/'.concat(this.newSearch))
                     .then(res => {
                         this.lastSearch = this.newSearch;
@@ -51,19 +51,6 @@ new Vue({
                     .catch(err => {
                         console.log(err);
                     });
-                // window.sendLog('sendLog', 'search', this.newSearch);
-                this.sendLog('search', {
-                    service_id: RECO_SERVICE_ID,
-                    uid: this.uid,
-                    ref: RECO_REF,
-                    url: RECO_URL,
-                    q: this.newSearch,
-                    user: {
-                        mid: mid,
-                        gender: gender,
-                        birthyear: birthYear
-                    }
-                });
             }
         },
         onDetail(index) {
@@ -73,25 +60,6 @@ new Vue({
             // addedItem이 변경되면 component-cart.js 내의 메서드를 호출하게 되므로
             // 장바구니 로그는 component-basket.js에서 전송하게 구현
             this.addedItem = this.items[index];
-        },
-        onOrder: function(cart) {
-            this.convertToOrderItems(cart);
-            this.sendLog('order', {
-                service_id: RECO_SERVICE_ID,
-                uid: RECO_UID,
-                ref: RECO_REF,
-                url: RECO_URL,
-                items: this.cart.cartItems,
-                user: {
-                    mid: RECO_MID,
-                    gender: RECO_GENDER,
-                    birthyear: RECO_BIRTHYEAR
-                }
-            });
-        },
-        sendLog: function(action, payload) {
-            // console.log(action, payload);
-            window.recoPick('sendLog', action, payload);
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {
