@@ -21,6 +21,14 @@
     </div>
 </div>
 
+<!-- RecoPick 주문완료_top 스크립트 -->
+<div id="recopick_widget_ncdX88Te" data-widget_id="ncdX88Te">
+    <script>
+        (function(w,n){w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};}(window, 'recoPick'));
+        recoPick('widget', 'recopick_widget_ncdX88Te');
+    </script>
+</div>
+<!-- RecoPick 주문완료_top 스크립트 -->
 <script src="/js/component-cart.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/scrollMonitor.js"></script>
