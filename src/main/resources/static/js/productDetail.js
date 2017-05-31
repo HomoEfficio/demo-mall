@@ -59,7 +59,6 @@ new Vue({
                 document.getElementById('reco-meta-description').setAttribute('content', this.product.productName);
                 // document.getElementById('reco-meta-author').setAttribute('content', this.product.sellerNick);
 
-console.log('sendLog-view 호출', this.product.productCode, window.recoPick);
                 window.recoPick('sendLog','view', false, {id:this.product.productCode, c1:'카테고리(대)', c2:'카테고리(중)', c3:'카테고리(소)'});
             })
             .catch(err => {
@@ -69,7 +68,6 @@ console.log('sendLog-view 호출', this.product.productCode, window.recoPick);
         axios.get('/api/carts')
             .then(res => {
                 this.cart = res.data;
-                // this.cart.cartItems = res.data.cartItems;
             })
             .catch(err => {
                 console.log(err);
@@ -84,16 +82,11 @@ console.log('sendLog-view 호출', this.product.productCode, window.recoPick);
         },
         addToCart: function() {
             this.addedItem = this.product;
-            // Todo: 상품 정보
-        },
-        sendLog: function(action, payload) {
-            console.log(action, payload);
         },
         convertToOrderItems: function(cartItems) {
             for (var i = 0, len = cartItems.length; i < len; i++) {
                 var item = cartItems[i];
                 item.total_sales = item.price * item.count;
-                // item.order_no = Math.floor(Math.random()*(10000000000-1000000000)+1000000000).toString();
             }
         },
         gotoMain(userName) {

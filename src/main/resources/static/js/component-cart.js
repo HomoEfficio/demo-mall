@@ -49,6 +49,9 @@ Vue.component('demo-cart', {
             });
     },
     methods: {
+        sendLog(action, payload) {
+            window.recoPick('sendLog', action, false, payload);
+        },
         cartItemsToRecoItems(cartItems) {
             let recoItems = [];
             for (let cartItem of cartItems) {
@@ -121,7 +124,7 @@ Vue.component('demo-cart', {
                     amounts: item.productPrice * 1
                 });
             }
-            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
+            this.sendLog('basket', this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
         },
         inc: function(i) {
@@ -129,7 +132,7 @@ Vue.component('demo-cart', {
             current.quantity++;
             current.amounts = current.product.productPrice * current.quantity;
             this.total += current.product.productPrice;
-            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
+            this.sendLog('basket', this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
         },
         dec: function(i) {
@@ -140,7 +143,7 @@ Vue.component('demo-cart', {
             if (current.quantity <= 0) {
                 this.cart.cartItems.splice(i, 1);
             }
-            window.recoPick('sendLog', 'basket', false, this.cartItemsToRecoItems(this.cart.cartItems));
+            this.sendLog('basket', this.cartItemsToRecoItems(this.cart.cartItems));
             this.saveCurrentCart();
         },
         saveCurrentCart() {
@@ -155,13 +158,13 @@ Vue.component('demo-cart', {
         onOrder() {
             axios.post('/api/orders', this.cart)
                 .then(res => {
-                    window.recoPick('sendLog', 'order', false, this.orderItemsToRecoItems(this.cart.cartItems));
+                    this.sendLog('order', this.orderItemsToRecoItems(this.cart.cartItems));
                     console.log(res);
                     let orderId = res.data;
                     document.location.href = '/orders/' + orderId;
                 }).catch(err => {
                     console.log(err);
                 });
-        }
+        },
     }
 });
