@@ -75,10 +75,12 @@ public class ApiController {
                                     if (!categoryDto.isEmpty()) {
                                         p.setCategoryName(categoryDto.get(0).getCategoryName());
                                     }
-                                    productRepository.save(p);
                                 });
 
                         df.setResult(objMapper.writeValueAsString(products));
+                        // df.setResult()를 먼저 실행해서 클라이언트에게 검색 결과를 준 후에
+                        // insert/save를 실행하므로 사용자 체감 성능 향상
+                        productRepository.save(products);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
