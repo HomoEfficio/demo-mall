@@ -12,7 +12,6 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.*;
 import skplanet.recopick.demo.mall.dto.CategoryDto;
-import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
@@ -53,6 +52,8 @@ public class ApiController {
     @GetMapping("/search/{keyword}")
     public DeferredResult<String> search11st(@PathVariable("keyword") String keyword) {
 
+        Objects.requireNonNull(keyword);
+
         DeferredResult<String> df = new DeferredResult<>();
 
         String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword + "&option=Categories";
@@ -91,35 +92,48 @@ public class ApiController {
     }
 
     @GetMapping("/products/{productCode}")
-    public DeferredResult<String> find(@PathVariable("productCode") String productCode) {
+    public ResponseEntity<Product> findProduct(@PathVariable("productCode") String productCode) {
 
-        DeferredResult<String> df = new DeferredResult<>();
+        Objects.requireNonNull(productCode);
 
-        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
-        HttpEntity<String> stringHttpEntity = getStringHttpEntity();
+        Product product = productRepository.findOne(productCode);
 
-        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
-        ListenableFuture<ResponseEntity<String>> lFuture =
-                asyncRestTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
-
-        lFuture.addCallback(
-                result -> {
-                    try {
-                        ProductInfoResultContainerDto productInfoResponseDto =
-                                objMapper.readValue(result.getBody(), ProductInfoResultContainerDto.class);
-                        df.setResult(objMapper.writeValueAsString(
-                                productInfoResponseDto.getProductInfoResponse().getProduct()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> {
-                    System.out.println(error);
-                }
-        );
-
-        return df;
+        return ResponseEntity.ok(product);
     }
+
+
+//    @GetMapping("/products/{productCode}")
+//    public DeferredResult<String> find(@PathVariable("productCode") String productCode) {
+//
+//        Objects.requireNonNull(productCode);
+//
+//        DeferredResult<String> df = new DeferredResult<>();
+//
+//        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products/" + productCode;
+//        HttpEntity<String> stringHttpEntity = getStringHttpEntity();
+//
+//        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
+//        ListenableFuture<ResponseEntity<String>> lFuture =
+//                asyncRestTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
+//
+//        lFuture.addCallback(
+//                result -> {
+//                    try {
+//                        ProductInfoResultContainerDto productInfoResponseDto =
+//                                objMapper.readValue(result.getBody(), ProductInfoResultContainerDto.class);
+//                        df.setResult(objMapper.writeValueAsString(
+//                                productInfoResponseDto.getProductInfoResponse().getProduct()));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                },
+//                error -> {
+//                    System.out.println(error);
+//                }
+//        );
+//
+//        return df;
+//    }
 
     private HttpEntity<String> getStringHttpEntity() {
 

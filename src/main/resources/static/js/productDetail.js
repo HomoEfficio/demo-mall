@@ -20,46 +20,19 @@ new Vue({
         addedItem: {}  // cart 컴포넌트에서 사용되는 변수
     },
     created() {
-        // this.userName = '${Session.userName}';
-        // this.product.productCode = '${product.productCode}';
-        // this.product.productName = '${product.productName}';
-        // this.product.productPrice = parseInt('${productPrice}'.replace(/,/g, ''));
-        // this.product.basicImage = '${product.basicImage}';
-        // this.product.addImage1 = '${(product.addImage1)!}';
-        // this.product.addImage2 = '${(product.addImage2)!}';
-        // this.product.point = '${product.point}';
-        // this.product.chip = '${product.chip}';
-        // this.product.installment = '${product.installment}';
-        // this.product.shipFee = '${product.shipFee}';
-        // this.product.sellSatisfaction = '${product.sellSatisfaction}';
-        // this.product.sellGrade = '${product.sellGrade}';
-
         let href = document.location.href;
         let productCode = href.substring(href.lastIndexOf('/') + 1);
         axios.get('/api/products/' + productCode)
             .then(res => {
                 this.product = res.data;
-                // this.product.productCode = '${product.productCode}';
-                // this.product.productName = '${product.productName}';
-                let priceString = this.product.productPrice.price;
-                this.product.productPrice = priceString.substring(0, priceString.length - 1).replace(/,/g, '');
-                // this.product.basicImage = '${product.basicImage}';
-                // this.product.addImage1 = '${(product.addImage1)!}';
-                // this.product.addImage2 = '${(product.addImage2)!}';
-                // this.product.point = '${product.point}';
-                // this.product.chip = '${product.chip}';
-                // this.product.installment = '${product.installment}';
-                // this.product.shipFee = '${product.shipFee}';
-                // this.product.sellSatisfaction = '${product.sellSatisfaction}';
-                // this.product.sellGrade = '${product.sellGrade}';
                 document.getElementById('reco-meta-title').setAttribute('content', this.product.productName);
-                document.getElementById('reco-meta-image').setAttribute('content', this.product.basicImage);
+                document.getElementById('reco-meta-image').setAttribute('content', this.product.productImage);
                 document.getElementById('reco-meta-price').setAttribute('content', this.product.productPrice);
                 document.getElementById('reco-meta-price-currency').setAttribute('content', 'KRW');
                 document.getElementById('reco-meta-description').setAttribute('content', this.product.productName);
-                // document.getElementById('reco-meta-author').setAttribute('content', this.product.sellerNick);
+                document.getElementById('reco-meta-author').setAttribute('content', this.product.sellerNick);
 
-                window.recoPick('sendLog','view', false, {id:this.product.productCode, c1:'카테고리(대)', c2:'카테고리(중)', c3:'카테고리(소)'});
+                window.recoPick('sendLog','view', false, {id:this.product.productCode, c1: this.product.categoryName});
             })
             .catch(err => {
                 console.log(err);

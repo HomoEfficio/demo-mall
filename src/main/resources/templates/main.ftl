@@ -67,24 +67,6 @@
             </div>
         </div>
         <div class="cart">
-            <#--<h2>Shopping Cart</h2>-->
-            <#--<transition-group name="fade" tag="ul">-->
-                <#--<li class="cart-item" v-for="(item, index) in cart.cartItems" v-bind:key="index">-->
-                    <#--<div class="item-title">{{ item.product.productName }}</div>-->
-                    <#--<span class="item-qty">{{ item.product.productPrice }} * {{ item.quantity }}</span>-->
-                    <#--<button class="btn" v-on:click="inc(index)">+</button>-->
-                    <#--<button class="btn" v-on:click="dec(index)">-</button>-->
-                <#--</li>-->
-            <#--</transition-group>-->
-            <#--<transition name="fade">-->
-                <#--<div v-if="cart.length">-->
-                    <#--<p>Total: {{ total | currency }}</p>-->
-                    <#--<div><button class="btn order-now" v-on:click="onOrder(cart)">Order Now</button></div>-->
-                <#--</div>-->
-            <#--</transition>-->
-            <#--<div v-if="cart.length === 0" class="empty-cart">-->
-                <#--No items in the cart-->
-            <#--</div>-->
             <demo-cart :added-item="addedItem" :uid="${Session.userName}" :user-info="{mid: '${mid}', birthYear: '${birthYear}', gender: '${gender}'}"></demo-cart>
         </div>
     </div>

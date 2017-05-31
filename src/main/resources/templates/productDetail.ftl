@@ -17,7 +17,6 @@
             o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
         })(window, document, 'recoPick', 'script');
         recoPick('service', 'dev.recopick.com');
-//        recoPick('sendLog','view', {id:'상품id', c1:'카테고리(대)', c2:'카테고리(중)', c3:'카테고리(소)'});  // productDetail.js 내부로 이동
     </script>
     <!--RecoPick 로그수집 스크립트 -->
 
@@ -28,7 +27,7 @@
     <meta property="recopick:price" content="" id="reco-meta-price">
     <meta property="recopick:price:currency" content="KRW" id="reco-meta-price-currency">
     <meta property="recopick:description" content="" id="reco-meta-description">
-    <#--<meta property="recopick:author" content="" id="reco-meta-author">-->
+    <meta property="recopick:author" content="" id="reco-meta-author">
     <!--RecoPick 상품 메타 태그 -->
 </head>
 <body>
@@ -44,41 +43,21 @@
             <div class="product">
                 <div>
                     <div class="product-image">
-                        <img :src="product.basicImage">
+                        <img :src="product.productImage">
                     </div>
                 </div>
                 <div>
                     <h4 class="product-title">{{product.productName}}</h4>
-                    <p>Price: <strong>{{product.productPrice}}</strong></p>
-                    <p>Point: {{product.point}}</p>
-                    <p>Chip: {{product.chip}}</p>
-                    <p>Installment: {{product.installment}}</p>
-                    <p>Ship Fee: {{product.shipFee}}</p>
-                    <p>Sell Satisfaction: {{product.sellSatisfaction}}</p>
-                    <p>Sell Grade: {{product.sellGrade}}</p>
+                    <p>가격: <strong>{{product.productPrice}}</strong></p>
+                    <p>판매자 등급: {{product.sellerGrd}}</p>
+                    <p>판매자 별명: {{product.sellerNick}}</p>
+                    <p>구매 만족도: {{product.buySatisfy}}</p>
                     <button class="btn add-to-cart" @click="addToCart()">Add to cart</button>
                 </div>
             </div>
         </div>
         <div class="cart">
             <demo-cart :added-item="addedItem"></demo-cart>
-            <#--<transition-group name="fade" tag="ul">-->
-                <#--<li class="cart-item" v-for="(item, index) in cart.cartItems" v-bind:key="index">-->
-                    <#--<div class="item-title">{{ item.product.productName }}</div>-->
-                    <#--<span class="item-qty">{{ item.product.productPrice }} * {{ item.quantity }}</span>-->
-                    <#--<button class="btn" v-on:click="inc(index)">+</button>-->
-                    <#--<button class="btn" v-on:click="dec(index)">-</button>-->
-                <#--</li>-->
-            <#--</transition-group>-->
-            <#--<transition name="fade">-->
-                <#--<div v-if="cart.length">-->
-                    <#--<p>Total: {{ total }}</p>-->
-                    <#--<div><button class="btn order-now" v-on:click="onOrder(cart)">Order Now</button></div>-->
-                <#--</div>-->
-            <#--</transition>-->
-            <#--<div v-if="cart.length === 0" class="empty-cart">-->
-                <#--No items in the cart-->
-            <#--</div>-->
         </div>
     </div>
 </div>
