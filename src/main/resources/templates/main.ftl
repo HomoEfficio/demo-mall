@@ -34,7 +34,7 @@
 <body>
 <div id="app">
     <div class="header">
-        <h1>RecoPick Demo Mall</h1>
+        <h1 class="link" @click="gotoMain('${Session.userName}')">RecoPick Demo Mall</h1>
         <form class="searchbar" v-on:submit.prevent="onSearch('${mid}', '${birthYear}', '${gender}')">
             <input v-model="newSearch" placeholder="Search for posters" autofocus>
             <input type="submit" value="Search" class="btn">
