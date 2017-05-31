@@ -40,7 +40,7 @@ new Vue({
             if (this.newSearch.length) {
                 this.items = [];
                 this.loading = true;
-                window.recoPick('sendLog', 'search', false, this.newSearch);
+                window.recoPick('sendLog', 'search', this.newSearch);
                 axios.get('/api/search/'.concat(this.newSearch))
                     .then(res => {
                         this.lastSearch = this.newSearch;
