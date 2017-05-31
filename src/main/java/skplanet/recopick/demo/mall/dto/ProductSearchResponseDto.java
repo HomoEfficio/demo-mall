@@ -14,4 +14,6 @@ public class ProductSearchResponseDto {
     private RequestDto request;
 
     private ProductsDto products;
+
+    private CategoriesDto categories;
 }

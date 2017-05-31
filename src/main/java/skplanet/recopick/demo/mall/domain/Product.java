@@ -77,6 +77,11 @@ public class Product extends BaseEntity implements Serializable {
 
     private String minorYn;
 
+    // 원래 상품 검색의 상품 정보에는 없는 항목이지만
+    // 상품 검색의 결과에 포함되어 있는 카테고리 목록 중
+    // 첫번째 항목 이름을 여기에 저장해서 view 로그 전달 시 파라미터로 사용
+    private String categoryName;
+
     @Embedded
     private Benefit benefit;
 

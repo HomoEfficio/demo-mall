@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.*;
+import skplanet.recopick.demo.mall.dto.CategoryDto;
 import skplanet.recopick.demo.mall.dto.ProductInfoResultContainerDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
 import skplanet.recopick.demo.mall.exception.MemberNotFountException;
@@ -54,7 +55,7 @@ public class ApiController {
 
         DeferredResult<String> df = new DeferredResult<>();
 
-        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword;
+        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword + "&option=Categories";
         HttpEntity<String> stringHttpEntity = getStringHttpEntity();
 
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
@@ -67,8 +68,14 @@ public class ApiController {
 
                         // Product 데이터가 테이블에 없으므로, 검색할 때마다 DB에 넣어 Product 데이터 구성
                         List<Product> products = searchResultContainerDto.getProductSearchResponse().getProducts().getProduct();
-                        products.stream()
-                                .forEach((p) -> productRepository.save(p));
+                        products.forEach(
+                                (p) -> {
+                                    List<CategoryDto> categoryDto = searchResultContainerDto.getProductSearchResponse().getCategories().getCategory();
+                                    if (!categoryDto.isEmpty()) {
+                                        p.setCategoryName(categoryDto.get(0).getCategoryName());
+                                    }
+                                    productRepository.save(p);
+                                });
 
                         df.setResult(objMapper.writeValueAsString(products));
                     } catch (IOException e) {
