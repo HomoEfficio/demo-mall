@@ -65,14 +65,23 @@
         </div>
     </div>
 </div>
-<!-- RecoPick 상품상세_상단 스크립트 -->
+<!-- RecoPick 상품상세_하단 위젯 스크립트 -->
 <div id="recopick_widget_EcbX8XTK" data-widget_id="EcbX8XTK">
     <script>
         (function(w,n){w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};}(window, 'recoPick'));
         recoPick('widget', 'recopick_widget_EcbX8XTK');
     </script>
 </div>
-<!-- RecoPick 상품상세_상단 스크립트 -->
+<!-- RecoPick 상품상세_하단 위젯 스크립트 -->
+
+<#--<!-- RecoPick AB테스트 적용 위젯 스크립트 &ndash;&gt;-->
+<#--<div id="recopick-widget-njTGRpcX" data-abtest_id="njTGRpcX">-->
+    <#--<script>-->
+        <#--(function(w,n){w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};}(window, 'recoPick'));-->
+        <#--recoPick('abtest', "recopick-widget-njTGRpcX");-->
+    <#--</script>-->
+<#--</div>-->
+<#--<!-- RecoPick AB테스트 적용 위젯 스크립트 &ndash;&gt;-->
 
 <script src="/js/component-cart.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

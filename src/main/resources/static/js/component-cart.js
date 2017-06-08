@@ -125,7 +125,7 @@ Vue.component('demo-cart', {
         saveCurrentCart() {
             axios.post('/api/carts', this.cart)
                 .then(res => {
-                    console.log(res);
+                    console.log('in component-cart.js, cart saved:', res);
                 })
                 .catch(err => {
                     console.log(err);
