@@ -241,3 +241,13 @@ h1 {
     cursor: pointer;
     cursor: hand;
 }
+
+/* CUSTOM */
+.sign-up, .sign-in {
+    padding: 2em;
+    text-align: center;
+}
+
+.header-center {
+    text-align: center;
+}
