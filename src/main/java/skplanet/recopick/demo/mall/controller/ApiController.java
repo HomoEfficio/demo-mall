@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,8 @@ public class ApiController {
     @NonNull private final ProductRepository productRepository;
     @NonNull private final MemberRepository memberRepository;
 
+    @Value("${searchApi.appKey}")
+    private String searchApiAppKey;
 
     /**
      * 상품 검색
@@ -140,7 +143,7 @@ public class ApiController {
     private HttpEntity<String> getStringHttpEntity() {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("appKey", "83aeb0b1-94db-3372-9364-22a13e6b6df2");
+        httpHeaders.set("appKey", this.searchApiAppKey);
         httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.set("Cache-control", "no-cache");
         return new HttpEntity<>(httpHeaders);

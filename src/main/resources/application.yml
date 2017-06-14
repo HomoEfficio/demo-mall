@@ -31,6 +31,8 @@ spring.jpa:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
+searchApi.appKey: 83aeb0b1-94db-3372-9364-22a13e6b6df2
+
 ---
 spring.profiles: local
 
