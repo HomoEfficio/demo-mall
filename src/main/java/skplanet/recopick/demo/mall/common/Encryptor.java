@@ -1,5 +1,7 @@
 package skplanet.recopick.demo.mall.common;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +14,10 @@ import java.util.Arrays;
  *         created on 2017-05-26
  */
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class Encryptor {
 
-    private final MessageDigest sha256md;
-
-    @Autowired
-    public Encryptor(MessageDigest sha256md) {
-        this.sha256md = sha256md;
-    }
+    @NonNull private final MessageDigest sha256md;
 
     public String sha256hash(String original) {
 
