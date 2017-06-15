@@ -10,6 +10,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.*;
 import skplanet.recopick.demo.mall.dto.CategoryDto;
@@ -43,10 +44,46 @@ public class ApiController {
     @NonNull private final MemberRepository memberRepository;
 
     @Value("${searchApi.appKey}")
-    private String searchApiAppKey;
+    private String SEARCH_API_APP_KEY;
 
     /**
      * 상품 검색
+     * 11번가 상품 검색 Open API 사용
+     *
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/search-slow/{keyword}")
+    public ResponseEntity<String> search11stSlow(@PathVariable("keyword") String keyword) throws IOException {
+
+        Objects.requireNonNull(keyword);
+
+        String apiUrl = "http://apis.skplanetx.com/11st/v2/common/products?searchKeyword=" + keyword + "&option=Categories";
+        HttpEntity<String> stringHttpEntity = getStringHttpEntity();
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.GET, stringHttpEntity, String.class);
+
+        SearchResultContainerDto searchResultContainerDto =
+                objMapper.readValue(responseEntity.getBody(), SearchResultContainerDto.class);
+
+        // Product 데이터가 테이블에 없으므로, 검색할 때마다 DB에 넣어 Product 데이터 구성
+        List<Product> products = searchResultContainerDto.getProductSearchResponse().getProducts().getProduct();
+        products.forEach(
+                (p) -> {
+                    List<CategoryDto> categoryDto = searchResultContainerDto.getProductSearchResponse().getCategories().getCategory();
+                    if (!categoryDto.isEmpty()) {
+                        p.setCategoryName(categoryDto.get(0).getCategoryName());
+                    }
+                });
+
+        productRepository.save(products);
+
+        return ResponseEntity.ok(objMapper.writeValueAsString(products));
+    }
+
+    /**
+     * 상품 검색 - 사용자 체감 성능이 더 나은 DeferredResult 버전
      * 11번가 상품 검색 Open API 사용
      *
      * @param keyword
@@ -143,7 +180,7 @@ public class ApiController {
     private HttpEntity<String> getStringHttpEntity() {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("appKey", this.searchApiAppKey);
+        httpHeaders.set("appKey", this.SEARCH_API_APP_KEY);
         httpHeaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.set("Cache-control", "no-cache");
         return new HttpEntity<>(httpHeaders);
