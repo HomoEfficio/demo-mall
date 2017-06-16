@@ -13,7 +13,7 @@
             o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
         })(window, document, 'recoPick', 'script');
         recoPick('service', 'dev.recopick.com');
-        recoPick('sendLog','visit');
+//        recoPick('sendLog','visit');
     </script>
     <!--RecoPick 로그수집 스크립트 -->
 </head>
