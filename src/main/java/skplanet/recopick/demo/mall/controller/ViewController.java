@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import skplanet.recopick.demo.mall.common.Encryptor;
 import skplanet.recopick.demo.mall.domain.Member;
 import skplanet.recopick.demo.mall.domain.Order;
-import skplanet.recopick.demo.mall.exception.MemberNotFountException;
+import skplanet.recopick.demo.mall.exception.MemberNotFoundException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.service.OrderService;
 
@@ -56,7 +56,7 @@ public class ViewController {
 
     private void setUserInfo(String userName, ModelAndView mv) {
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
-        Member member = memberOptional.orElseThrow(MemberNotFountException::new);
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
         mv.addObject("mid", encryptor.sha256hash(userName));
         mv.addObject("birthYear", member.getBirthYear());

@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import skplanet.recopick.demo.mall.domain.*;
 import skplanet.recopick.demo.mall.dto.CategoryDto;
 import skplanet.recopick.demo.mall.dto.SearchResultContainerDto;
-import skplanet.recopick.demo.mall.exception.MemberNotFountException;
+import skplanet.recopick.demo.mall.exception.MemberNotFoundException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.repository.ProductRepository;
 import skplanet.recopick.demo.mall.service.CartService;
@@ -215,7 +215,7 @@ public class ApiController {
 
     private Member getPersistedMember(HttpSession session) {
         Optional<Member> memberOptional = memberRepository.findByUserName((String)session.getAttribute("userName"));
-        return memberOptional.orElseThrow(MemberNotFountException::new);
+        return memberOptional.orElseThrow(MemberNotFoundException::new);
     }
 
     @PostMapping("/orders")

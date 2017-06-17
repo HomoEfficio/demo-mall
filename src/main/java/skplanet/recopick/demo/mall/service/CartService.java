@@ -10,15 +10,13 @@ import skplanet.recopick.demo.mall.domain.CartItem;
 import skplanet.recopick.demo.mall.domain.CartItemId;
 import skplanet.recopick.demo.mall.domain.Member;
 import skplanet.recopick.demo.mall.exception.CartNotFoundException;
-import skplanet.recopick.demo.mall.exception.MemberNotFountException;
+import skplanet.recopick.demo.mall.exception.MemberNotFoundException;
 import skplanet.recopick.demo.mall.repository.CartItemRepository;
 import skplanet.recopick.demo.mall.repository.CartRepository;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author homo.efficio@gmail.com
@@ -36,7 +34,7 @@ public class CartService {
     public Long save(String userName, Cart cart) {
 
         Optional<Member> memberOptional = memberRepository.findByUserName(userName);
-        Member member = memberOptional.orElseThrow(MemberNotFountException::new);
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
         cart.setMember(member);
 
         Optional<Cart> cartOptional = cartRepository.findByMember(member);
