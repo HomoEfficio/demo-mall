@@ -3,6 +3,7 @@ package skplanet.recopick.demo.mall.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class ApiController {
 
     @NonNull private final ObjectMapper objMapper;
@@ -227,5 +229,4 @@ public class ApiController {
 
         return persistedOrder.getId();
     }
-
 }

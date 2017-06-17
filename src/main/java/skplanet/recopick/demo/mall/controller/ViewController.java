@@ -2,6 +2,7 @@ package skplanet.recopick.demo.mall.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ import skplanet.recopick.demo.mall.exception.MemberNotFountException;
 import skplanet.recopick.demo.mall.repository.MemberRepository;
 import skplanet.recopick.demo.mall.service.OrderService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import java.util.Optional;
  */
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class ViewController {
 
     @NonNull private final MemberRepository memberRepository;
