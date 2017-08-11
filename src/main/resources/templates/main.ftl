@@ -24,6 +24,7 @@
             e=d.createElement(s);e.async=1;e.charset='utf-8';e.src='//static.recopick.com/dist/production.min.js';
             o=d.getElementsByTagName(s)[0];o.parentNode.insertBefore(e,o);
         })(window, document, 'recoPick', 'script');
+console.log('$$$$$ SDK 호출 직후');
         recoPick('service', 'dev.recopick.com');
         recoPick('setUID', '${Session.userName}');
 //        recoPick('fetchUID', (uid)=>console.log('fetched UID:', uid));  // uid 설정 실제로 확인
