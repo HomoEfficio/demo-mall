@@ -79,4 +79,17 @@ public class ViewController {
         mv.addObject("order", order);
         return mv;
     }
+
+    @GetMapping("/webview")
+    public String webViewIndex() {
+        return "webview/index";
+    }
+
+    @GetMapping("/webview/main/{userName}")
+    public ModelAndView webViewSignIn(@PathVariable("userName") String userName, HttpSession session, ModelAndView mv) {
+        mv.setViewName("webview/main");
+        session.setAttribute("userName", userName);
+        setUserInfo(userName, mv);
+        return mv;  // main 화면에서 memberId로 장바구니 조회해서 있으면 표시하도록
+    }
 }
